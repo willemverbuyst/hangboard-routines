@@ -24,21 +24,6 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
 
   const [routine, setRoutine] = useState<Routine>([countdown, defaultSet]);
 
-  const totalSeconds = routine.reduce((total, set) => {
-    if (set.type === "countdown" || set.type === "recovery") {
-      return total + set.value;
-    } else if (set.type === "set") {
-      return (
-        total +
-        set.value.reduce(
-          (setTotal, iteration) => setTotal + iteration.hang + iteration.rest,
-          0
-        )
-      );
-    }
-    return total;
-  }, 0);
-
   function getLabelForSet(routineIndex: number) {
     const set = routine[routineIndex] as Set;
     const iterations = set.value.length;
@@ -107,7 +92,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
         {routine[0]?.type !== "countdown" && (
           <IonRow className="ion-padding">
             <IonCol size="11">
-              <AddButton label="Countdown" onAdd={() => addCountdown(0)} />
+              <AddButton label="Countdown" onAdd={() => addCountdown()} />
               {routine.length === 0 && (
                 <AddButton label="Set" onAdd={() => addSet(0)} />
               )}
