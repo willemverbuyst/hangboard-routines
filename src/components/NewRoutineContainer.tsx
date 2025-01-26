@@ -8,6 +8,7 @@ import {
   IonText,
 } from "@ionic/react";
 import { Fragment, useState } from "react";
+import DeleteButton from "./DeleteButton";
 import "./NewRoutineContainer.css";
 import { Countdown, Iteration, Recovery, Routine, Set } from "./types";
 
@@ -46,6 +47,19 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
     return `Set ${setsBeforeIndex + 1} - ${iterations} ${
       iterations === 1 ? "iteration" : "iterations"
     }`;
+  }
+
+  function onDelete(index: number, setIndex?: number) {
+    const newRoutine = [...routine];
+    const item = newRoutine[index];
+
+    if (item.type !== "set" || item.value.length === 1) {
+      newRoutine.splice(index, 1);
+    } else if (setIndex !== undefined) {
+      item.value.splice(setIndex, 1);
+    }
+
+    setRoutine(newRoutine);
   }
 
   return (
@@ -133,18 +147,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 />
               </IonCol>
               <IonCol size="1">
-                <IonButton
-                  color="danger"
-                  size="small"
-                  onClick={() => {
-                    const newRoutine = [...routine];
-
-                    newRoutine.shift();
-                    setRoutine(newRoutine);
-                  }}
-                >
-                  x
-                </IonButton>
+                <DeleteButton onDelete={() => onDelete(index)} />
               </IonCol>
               <IonCol size="11">
                 <IonButton
@@ -204,18 +207,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 />
               </IonCol>
               <IonCol size="1">
-                <IonButton
-                  color="danger"
-                  size="small"
-                  onClick={() => {
-                    const newRoutine = [...routine];
-                    newRoutine.splice(index, 1);
-
-                    setRoutine(newRoutine);
-                  }}
-                >
-                  x
-                </IonButton>
+                <DeleteButton onDelete={() => onDelete(index)} />
               </IonCol>
               <IonCol size="11">
                 <IonButton
@@ -332,23 +324,9 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                       />
                     </IonCol>
                     <IonCol size="1">
-                      <IonButton
-                        color="danger"
-                        size="small"
-                        onClick={() => {
-                          const newRoutine = [...routine];
-                          const currentSet = newRoutine[index] as Set;
-                          if (currentSet.value.length === 1) {
-                            newRoutine.splice(index, 1);
-                            setRoutine(newRoutine);
-                          } else {
-                            currentSet.value.splice(setIndex, 1);
-                            setRoutine(newRoutine);
-                          }
-                        }}
-                      >
-                        x
-                      </IonButton>
+                      <DeleteButton
+                        onDelete={() => onDelete(index, setIndex)}
+                      />
                     </IonCol>
                     <IonCol size="11">
                       <IonButton
