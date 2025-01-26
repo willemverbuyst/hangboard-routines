@@ -8,6 +8,7 @@ import {
   IonText,
 } from "@ionic/react";
 import { Fragment, useState } from "react";
+import AddButton from "./AddButton";
 import DeleteButton from "./DeleteButton";
 import "./NewRoutineContainer.css";
 import { Countdown, Iteration, Recovery, Routine, Set } from "./types";
@@ -62,6 +63,36 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
     setRoutine(newRoutine);
   }
 
+  function addCountdown() {
+    const newRoutine = [countdown, ...routine];
+
+    setRoutine(newRoutine);
+  }
+
+  function addRecovery(index: number) {
+    const newRoutine = [...routine];
+
+    newRoutine.splice(index + 1, 0, defaultRecovery);
+    setRoutine(newRoutine);
+  }
+
+  function addSet(index: number) {
+    const newRoutine = [...routine];
+
+    newRoutine.splice(index + 1, 0, defaultSet);
+    setRoutine(newRoutine);
+  }
+
+  function addIteration(index: number, setIndex: number) {
+    const newRoutine = [...routine];
+    const currentSet = newRoutine[index] as Set;
+    currentSet.value.splice(setIndex + 1, 0, {
+      ...currentSet.value[setIndex],
+    });
+
+    setRoutine(newRoutine);
+  }
+
   return (
     <div style={{ maxWidth: "500px", margin: "auto" }}>
       <IonGrid className="ion-padding">
@@ -75,29 +106,11 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
         {routine[0]?.type !== "countdown" && (
           <IonRow className="ion-padding">
             <IonCol size="11">
-              <IonButton
-                size="small"
-                color="secondary"
-                onClick={() => {
-                  const newRoutine = [countdown, ...routine];
-
-                  setRoutine(newRoutine);
-                }}
-              >
+              <IonButton size="small" color="secondary" onClick={addCountdown}>
                 + Countdown
               </IonButton>
               {routine.length === 0 && (
-                <IonButton
-                  size="small"
-                  color="secondary"
-                  onClick={() => {
-                    const newRoutine = [defaultSet];
-
-                    setRoutine(newRoutine);
-                  }}
-                >
-                  + Set
-                </IonButton>
+                <AddButton label="Set" onAdd={() => addSet(0)} />
               )}
             </IonCol>
           </IonRow>
@@ -150,18 +163,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <DeleteButton onDelete={() => onDelete(index)} />
               </IonCol>
               <IonCol size="11">
-                <IonButton
-                  size="small"
-                  color="secondary"
-                  onClick={() => {
-                    const newRoutine = [...routine];
-
-                    newRoutine.splice(index + 1, 0, defaultSet);
-                    setRoutine(newRoutine);
-                  }}
-                >
-                  + Set
-                </IonButton>
+                <AddButton label="Set" onAdd={() => addSet(index)} />
               </IonCol>
             </IonRow>
           ) : r.type === "recovery" ? (
@@ -210,18 +212,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <DeleteButton onDelete={() => onDelete(index)} />
               </IonCol>
               <IonCol size="11">
-                <IonButton
-                  size="small"
-                  color="secondary"
-                  onClick={() => {
-                    const newRoutine = [...routine];
-
-                    newRoutine.splice(index + 1, 0, defaultSet);
-                    setRoutine(newRoutine);
-                  }}
-                >
-                  + Set
-                </IonButton>
+                <AddButton label="Set" onAdd={() => addSet(index)} />
               </IonCol>
             </IonRow>
           ) : r.type === "set" ? (
@@ -329,49 +320,19 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                       />
                     </IonCol>
                     <IonCol size="11">
-                      <IonButton
-                        size="small"
-                        color="secondary"
-                        onClick={() => {
-                          const newRoutine = [...routine];
-                          const currentSet = newRoutine[index] as Set;
-                          currentSet.value.splice(setIndex + 1, 0, {
-                            ...currentSet.value[setIndex],
-                          });
-
-                          setRoutine(newRoutine);
-                        }}
-                      >
-                        + Iteration
-                      </IonButton>
+                      <AddButton
+                        label="Iteration"
+                        onAdd={() => addIteration(index, setIndex)}
+                      />
                       {setIndex === r.value.length - 1 && (
-                        <IonButton
-                          size="small"
-                          color="secondary"
-                          onClick={() => {
-                            const newRoutine = [...routine];
-
-                            newRoutine.splice(index + 1, 0, defaultSet);
-                            setRoutine(newRoutine);
-                          }}
-                        >
-                          + Set
-                        </IonButton>
+                        <AddButton label="Set" onAdd={() => addSet(index)} />
                       )}
                       {setIndex === r.value.length - 1 &&
                         routine[index + 1]?.type !== "recovery" && (
-                          <IonButton
-                            size="small"
-                            color="secondary"
-                            onClick={() => {
-                              const newRoutine = [...routine];
-
-                              newRoutine.splice(index + 1, 0, defaultRecovery);
-                              setRoutine(newRoutine);
-                            }}
-                          >
-                            + Recovery
-                          </IonButton>
+                          <AddButton
+                            label="Recovery"
+                            onAdd={() => addRecovery(index)}
+                          />
                         )}
                     </IonCol>
                   </Fragment>
