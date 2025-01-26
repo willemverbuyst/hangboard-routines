@@ -8,12 +8,12 @@ import {
 import ExploreContainer from "../components/ExploreContainer";
 import "./Home.css";
 
-const Home: React.FC = () => {
+const MyRoutines: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>My Hangboard App | Home</IonTitle>
+          <IonTitle>My Hangboard App | My Routines</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -23,4 +23,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default MyRoutines;
