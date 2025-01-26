@@ -38,6 +38,9 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
           r.type === "countdown" ? (
             <IonRow className="ion-padding" key={index}>
               <IonCol size="10">
+                <IonLabel>Start</IonLabel>
+              </IonCol>
+              <IonCol size="10">
                 {[10, 20, 30, 40, 50, 60].map((time) => (
                   <IonButton
                     key={time}
@@ -95,8 +98,6 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <IonCol>
                   <IonLabel>Recovery</IonLabel>
                 </IonCol>
-              </IonRow>
-              <IonRow className="ion-padding">
                 <IonCol size="10">
                   {[10, 20, 30, 40, 50, 60].map((time) => (
                     <IonButton
@@ -117,7 +118,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 </IonCol>
                 <IonCol size="10">
                   <IonInput
-                    label="Recovery"
+                    label="Rest"
                     type="number"
                     placeholder="0"
                     min="0"
@@ -153,13 +154,11 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
           ) : r.type === "set" ? (
             <Fragment key={index}>
               <IonRow className="ion-padding">
-                <IonCol>
+                <IonCol size="10">
                   <IonLabel>Set</IonLabel>
                 </IonCol>
-              </IonRow>
-              {r.value.map((set, setIndex) => (
-                <Fragment key={setIndex}>
-                  <IonRow className="ion-padding">
+                {r.value.map((set, setIndex) => (
+                  <Fragment key={setIndex}>
                     <IonCol size="5">
                       {[10, 20, 30, 40, 50, 60].map((time) => (
                         <IonButton
@@ -223,7 +222,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
 
                     <IonCol size="5">
                       <IonInput
-                        label="Break"
+                        label="Rest"
                         type="number"
                         placeholder="0"
                         min="0"
@@ -260,9 +259,9 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         -
                       </IonButton>
                     </IonCol>
-                  </IonRow>
-                </Fragment>
-              ))}
+                  </Fragment>
+                ))}
+              </IonRow>
             </Fragment>
           ) : null
         )}
