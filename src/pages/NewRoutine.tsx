@@ -5,7 +5,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import ExploreContainer from "../components/ExploreContainer";
+import NewRoutineContainer from "../components/NewRoutineContainer";
 import "./Home.css";
 
 const NewRoutine: React.FC = () => {
@@ -17,7 +17,7 @@ const NewRoutine: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <ExploreContainer />
+        <NewRoutineContainer />
       </IonContent>
     </IonPage>
   );
