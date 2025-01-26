@@ -36,6 +36,18 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
     return total;
   }, 0);
 
+  function getLabelForSet(routineIndex: number) {
+    const set = routine[routineIndex] as Set;
+    const iterations = set.value.length;
+    const setsBeforeIndex = routine
+      .slice(0, routineIndex)
+      .filter((item) => item.type === "set").length;
+
+    return `Set ${setsBeforeIndex + 1} - ${iterations} ${
+      iterations === 1 ? "iteration" : "iterations"
+    }`;
+  }
+
   return (
     <div style={{ maxWidth: "500px", margin: "auto" }}>
       <IonGrid className="ion-padding">
@@ -131,7 +143,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                     setRoutine(newRoutine);
                   }}
                 >
-                  -
+                  x
                 </IonButton>
               </IonCol>
               <IonCol size="11">
@@ -202,7 +214,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                     setRoutine(newRoutine);
                   }}
                 >
-                  -
+                  x
                 </IonButton>
               </IonCol>
               <IonCol size="11">
@@ -224,10 +236,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
             <Fragment key={index}>
               <IonRow className="ion-padding">
                 <IonCol size="10">
-                  <IonLabel>
-                    Set - {r.value.length}{" "}
-                    {r.value.length === 1 ? "iteration" : "iterations"}
-                  </IonLabel>
+                  <IonLabel>{getLabelForSet(index)}</IonLabel>
                 </IonCol>
                 {r.value.map((set, setIndex) => (
                   <Fragment key={setIndex}>
@@ -338,7 +347,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                           }
                         }}
                       >
-                        -
+                        x
                       </IonButton>
                     </IonCol>
                     <IonCol size="11">
