@@ -33,20 +33,48 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
             </IonText>
           </IonCol>
         </IonRow>
+        {routine[0]?.type !== "countdown" && (
+          <IonRow className="ion-padding">
+            <IonCol size="11">
+              <IonButton
+                size="small"
+                color="secondary"
+                onClick={() => {
+                  const newRoutine = [countdown, ...routine];
+
+                  setRoutine(newRoutine);
+                }}
+              >
+                + Countdown
+              </IonButton>
+              {routine.length === 0 && (
+                <IonButton
+                  size="small"
+                  color="secondary"
+                  onClick={() => {
+                    const newRoutine = [defaultSet];
+
+                    setRoutine(newRoutine);
+                  }}
+                >
+                  + Set
+                </IonButton>
+              )}
+            </IonCol>
+          </IonRow>
+        )}
 
         {routine.map((r, index) =>
           r.type === "countdown" ? (
             <IonRow className="ion-padding" key={index}>
-              <IonCol size="10">
+              <IonCol size="11">
                 <IonLabel>Start</IonLabel>
               </IonCol>
-              <IonCol size="10">
+              <IonCol size="11">
                 {[10, 20, 30, 40, 50, 60].map((time) => (
                   <IonButton
                     key={time}
-                    color={
-                      time === routine[index].value ? "success" : "tertiary"
-                    }
+                    color={time === routine[index].value ? "success" : "light"}
                     size="small"
                     onClick={() => {
                       const newRoutine = [...routine];
@@ -93,68 +121,92 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                   -
                 </IonButton>
               </IonCol>
+              <IonCol size="11">
+                <IonButton
+                  size="small"
+                  color="secondary"
+                  onClick={() => {
+                    const newRoutine = [...routine];
+
+                    newRoutine.splice(index + 1, 0, defaultSet);
+                    setRoutine(newRoutine);
+                  }}
+                >
+                  + Set
+                </IonButton>
+              </IonCol>
             </IonRow>
           ) : r.type === "recovery" ? (
-            <Fragment key={index}>
-              <IonRow className="ion-padding">
-                <IonCol>
-                  <IonLabel>Recovery</IonLabel>
-                </IonCol>
-                <IonCol size="10">
-                  {[10, 20, 30, 40, 50, 60].map((time) => (
-                    <IonButton
-                      key={time}
-                      color={
-                        time === routine[index].value ? "success" : "tertiary"
-                      }
-                      size="small"
-                      onClick={() => {
-                        const newRoutine = [...routine];
-                        const newRecovery = newRoutine[index] as Recovery;
-                        newRecovery.value = time;
-
-                        setRoutine(newRoutine);
-                      }}
-                    >
-                      {time}
-                    </IonButton>
-                  ))}
-                </IonCol>
-                <IonCol size="10">
-                  <IonInput
-                    label="Rest"
-                    type="number"
-                    placeholder="0"
-                    min="0"
-                    step="10"
-                    labelPlacement="floating"
-                    fill="outline"
-                    value={r.value}
-                    onIonChange={(e) => {
-                      const newRoutine = [...routine];
-                      const newRecovery = newRoutine[index] as Recovery;
-                      newRecovery.value = parseInt(e.detail.value!);
-
-                      setRoutine(newRoutine);
-                    }}
-                  />
-                </IonCol>
-                <IonCol size="1">
+            <IonRow className="ion-padding" key={index}>
+              <IonCol>
+                <IonLabel>Recovery</IonLabel>
+              </IonCol>
+              <IonCol size="10">
+                {[10, 20, 30, 40, 50, 60].map((time) => (
                   <IonButton
-                    color="danger"
+                    key={time}
+                    color={time === routine[index].value ? "success" : "light"}
                     size="small"
                     onClick={() => {
                       const newRoutine = [...routine];
-                      newRoutine.splice(index, 1);
+                      const newRecovery = newRoutine[index] as Recovery;
+                      newRecovery.value = time;
 
                       setRoutine(newRoutine);
                     }}
                   >
-                    -
+                    {time}
                   </IonButton>
-                </IonCol>
-              </IonRow>
-            </Fragment>
+                ))}
+              </IonCol>
+              <IonCol size="10">
+                <IonInput
+                  label="Rest"
+                  type="number"
+                  placeholder="0"
+                  min="0"
+                  step="10"
+                  labelPlacement="floating"
+                  fill="outline"
+                  value={r.value}
+                  onIonChange={(e) => {
+                    const newRoutine = [...routine];
+                    const newRecovery = newRoutine[index] as Recovery;
+                    newRecovery.value = parseInt(e.detail.value!);
+
+                    setRoutine(newRoutine);
+                  }}
+                />
+              </IonCol>
+              <IonCol size="1">
+                <IonButton
+                  color="danger"
+                  size="small"
+                  onClick={() => {
+                    const newRoutine = [...routine];
+                    newRoutine.splice(index, 1);
+
+                    setRoutine(newRoutine);
+                  }}
+                >
+                  -
+                </IonButton>
+              </IonCol>
+              <IonCol size="11">
+                <IonButton
+                  size="small"
+                  color="secondary"
+                  onClick={() => {
+                    const newRoutine = [...routine];
+
+                    newRoutine.splice(index + 1, 0, defaultSet);
+                    setRoutine(newRoutine);
+                  }}
+                >
+                  + Set
+                </IonButton>
+              </IonCol>
+            </IonRow>
           ) : r.type === "set" ? (
             <Fragment key={index}>
               <IonRow className="ion-padding">
@@ -171,7 +223,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                             time ===
                             (routine[index] as Set).value[setIndex].hang
                               ? "success"
-                              : "tertiary"
+                              : "light"
                           }
                           size="small"
                           onClick={() => {
@@ -196,7 +248,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                             time ===
                             (routine[index] as Set).value[setIndex].rest
                               ? "success"
-                              : "tertiary"
+                              : "light"
                           }
                           size="small"
                           onClick={() => {
@@ -273,6 +325,52 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         -
                       </IonButton>
                     </IonCol>
+                    <IonCol size="11">
+                      <IonButton
+                        size="small"
+                        color="secondary"
+                        onClick={() => {
+                          const newRoutine = [...routine];
+                          const currentSet = newRoutine[index] as Set;
+                          currentSet.value.splice(setIndex + 1, 0, {
+                            ...currentSet.value[setIndex],
+                          });
+
+                          setRoutine(newRoutine);
+                        }}
+                      >
+                        + Iteration
+                      </IonButton>
+                      {setIndex === r.value.length - 1 && (
+                        <IonButton
+                          size="small"
+                          color="secondary"
+                          onClick={() => {
+                            const newRoutine = [...routine];
+
+                            newRoutine.splice(index + 1, 0, defaultSet);
+                            setRoutine(newRoutine);
+                          }}
+                        >
+                          + Set
+                        </IonButton>
+                      )}
+                      {setIndex === r.value.length - 1 &&
+                        routine[index + 1]?.type !== "recovery" && (
+                          <IonButton
+                            size="small"
+                            color="secondary"
+                            onClick={() => {
+                              const newRoutine = [...routine];
+
+                              newRoutine.splice(index + 1, 0, defaultRecovery);
+                              setRoutine(newRoutine);
+                            }}
+                          >
+                            + Recovery
+                          </IonButton>
+                        )}
+                    </IonCol>
                   </Fragment>
                 ))}
               </IonRow>
@@ -301,58 +399,6 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
               }, 0)}
               &nbsp; seconds
             </IonText>
-          </IonCol>
-        </IonRow>
-
-        <IonRow className="ion-padding">
-          <IonCol>
-            <IonButton
-              onClick={() => {
-                const newRoutine = [...routine];
-
-                newRoutine.push(defaultSet);
-                setRoutine(newRoutine);
-              }}
-            >
-              + Set
-            </IonButton>
-            {!!routine.length && routine[routine.length - 1].type === "set" && (
-              <IonButton
-                onClick={() => {
-                  const newRoutine = [...routine];
-                  const lastSet = newRoutine[newRoutine.length - 1] as Set;
-                  lastSet.value.push(defaultIteration);
-
-                  setRoutine(newRoutine);
-                }}
-              >
-                + Iteration
-              </IonButton>
-            )}
-            {!!routine.length &&
-              routine[routine.length - 1].type !== "recovery" && (
-                <IonButton
-                  onClick={() => {
-                    const newRoutine = [...routine];
-
-                    newRoutine.push(defaultRecovery);
-                    setRoutine(newRoutine);
-                  }}
-                >
-                  + Recovery
-                </IonButton>
-              )}
-            {routine[0]?.type !== "countdown" && (
-              <IonButton
-                onClick={() => {
-                  const newRoutine = [countdown, ...routine];
-
-                  setRoutine(newRoutine);
-                }}
-              >
-                + Countdown
-              </IonButton>
-            )}
           </IonCol>
         </IonRow>
       </IonGrid>
