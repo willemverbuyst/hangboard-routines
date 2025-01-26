@@ -44,7 +44,9 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 {[10, 20, 30, 40, 50, 60].map((time) => (
                   <IonButton
                     key={time}
-                    color="tertiary"
+                    color={
+                      time === routine[index].value ? "success" : "tertiary"
+                    }
                     size="small"
                     onClick={() => {
                       const newRoutine = [...routine];
@@ -102,7 +104,9 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                   {[10, 20, 30, 40, 50, 60].map((time) => (
                     <IonButton
                       key={time}
-                      color="tertiary"
+                      color={
+                        time === routine[index].value ? "success" : "tertiary"
+                      }
                       size="small"
                       onClick={() => {
                         const newRoutine = [...routine];
@@ -163,7 +167,12 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                       {[10, 20, 30, 40, 50, 60].map((time) => (
                         <IonButton
                           key={time}
-                          color="tertiary"
+                          color={
+                            time ===
+                            (routine[index] as Set).value[setIndex].hang
+                              ? "success"
+                              : "tertiary"
+                          }
                           size="small"
                           onClick={() => {
                             const newRoutine = [...routine];
@@ -183,7 +192,12 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                       {[10, 20, 30, 40, 50, 60].map((time) => (
                         <IonButton
                           key={time}
-                          color="tertiary"
+                          color={
+                            time ===
+                            (routine[index] as Set).value[setIndex].rest
+                              ? "success"
+                              : "tertiary"
+                          }
                           size="small"
                           onClick={() => {
                             const newRoutine = [...routine];
