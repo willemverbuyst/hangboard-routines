@@ -107,9 +107,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
         {routine[0]?.type !== "countdown" && (
           <IonRow className="ion-padding">
             <IonCol size="11">
-              <IonButton size="small" color="secondary" onClick={addCountdown}>
-                + Countdown
-              </IonButton>
+              <AddButton label="Countdown" onAdd={() => addCountdown(0)} />
               {routine.length === 0 && (
                 <AddButton label="Set" onAdd={() => addSet(0)} />
               )}
