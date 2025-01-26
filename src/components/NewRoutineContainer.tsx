@@ -21,7 +21,20 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
 
   const [routine, setRoutine] = useState<Routine>([countdown, defaultSet]);
 
-  console.log(routine);
+  const totalSeconds = routine.reduce((total, set) => {
+    if (set.type === "countdown" || set.type === "recovery") {
+      return total + set.value;
+    } else if (set.type === "set") {
+      return (
+        total +
+        set.value.reduce(
+          (setTotal, iteration) => setTotal + iteration.hang + iteration.rest,
+          0
+        )
+      );
+    }
+    return total;
+  }, 0);
 
   return (
     <div style={{ maxWidth: "500px", margin: "auto" }}>
@@ -211,7 +224,10 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
             <Fragment key={index}>
               <IonRow className="ion-padding">
                 <IonCol size="10">
-                  <IonLabel>Set</IonLabel>
+                  <IonLabel>
+                    Set - {r.value.length}{" "}
+                    {r.value.length === 1 ? "iteration" : "iterations"}
+                  </IonLabel>
                 </IonCol>
                 {r.value.map((set, setIndex) => (
                   <Fragment key={setIndex}>
@@ -379,25 +395,13 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
         )}
 
         <IonRow className="ion-padding">
-          <IonCol>
+          <IonCol size="11">
             <IonText color="medium">
               Total:&nbsp;
-              {routine.reduce((total, set) => {
-                if (set.type === "countdown" || set.type === "recovery") {
-                  return total + set.value;
-                } else if (set.type === "set") {
-                  return (
-                    total +
-                    set.value.reduce(
-                      (setTotal, iteration) =>
-                        setTotal + iteration.hang + iteration.rest,
-                      0
-                    )
-                  );
-                }
-                return total;
-              }, 0)}
-              &nbsp; seconds
+              {totalSeconds} seconds | {Math.ceil(totalSeconds / 60)} minutes
+              {totalSeconds % 60 === 0
+                ? ""
+                : ` and ${totalSeconds % 60} seconds`}
             </IonText>
           </IonCol>
         </IonRow>
