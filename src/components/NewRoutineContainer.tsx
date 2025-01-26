@@ -11,6 +11,7 @@ import { Fragment, useState } from "react";
 import AddButton from "./AddButton";
 import DeleteButton from "./DeleteButton";
 import "./NewRoutineContainer.css";
+import Total from "./Total";
 import { Countdown, Iteration, Recovery, Routine, Set } from "./types";
 
 interface ContainerProps {}
@@ -344,13 +345,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
 
         <IonRow className="ion-padding">
           <IonCol size="11">
-            <IonText color="medium">
-              Total:&nbsp;
-              {totalSeconds} seconds | {Math.ceil(totalSeconds / 60)} minutes
-              {totalSeconds % 60 === 0
-                ? ""
-                : ` and ${totalSeconds % 60} seconds`}
-            </IonText>
+            <Total routine={routine} />
           </IonCol>
         </IonRow>
       </IonGrid>
