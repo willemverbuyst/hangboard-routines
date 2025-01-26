@@ -38,6 +38,24 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
           r.type === "countdown" ? (
             <IonRow className="ion-padding" key={index}>
               <IonCol size="10">
+                {[10, 20, 30, 40, 50, 60].map((time) => (
+                  <IonButton
+                    key={time}
+                    color="tertiary"
+                    size="small"
+                    onClick={() => {
+                      const newRoutine = [...routine];
+                      const newCountdown = newRoutine[index] as Countdown;
+                      newCountdown.value = time;
+
+                      setRoutine(newRoutine);
+                    }}
+                  >
+                    {time}
+                  </IonButton>
+                ))}
+              </IonCol>
+              <IonCol size="10">
                 <IonInput
                   label="Count down"
                   type="number"
@@ -79,6 +97,24 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 </IonCol>
               </IonRow>
               <IonRow className="ion-padding">
+                <IonCol size="10">
+                  {[10, 20, 30, 40, 50, 60].map((time) => (
+                    <IonButton
+                      key={time}
+                      color="tertiary"
+                      size="small"
+                      onClick={() => {
+                        const newRoutine = [...routine];
+                        const newRecovery = newRoutine[index] as Recovery;
+                        newRecovery.value = time;
+
+                        setRoutine(newRoutine);
+                      }}
+                    >
+                      {time}
+                    </IonButton>
+                  ))}
+                </IonCol>
                 <IonCol size="10">
                   <IonInput
                     label="Recovery"
@@ -125,6 +161,46 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <Fragment key={setIndex}>
                   <IonRow className="ion-padding">
                     <IonCol size="5">
+                      {[10, 20, 30, 40, 50, 60].map((time) => (
+                        <IonButton
+                          key={time}
+                          color="tertiary"
+                          size="small"
+                          onClick={() => {
+                            const newRoutine = [...routine];
+                            const currentSet = newRoutine[index] as Set;
+                            const currentIteration = currentSet.value[setIndex];
+
+                            currentIteration.hang = time;
+
+                            setRoutine(newRoutine);
+                          }}
+                        >
+                          {time}
+                        </IonButton>
+                      ))}
+                    </IonCol>
+                    <IonCol size="5">
+                      {[10, 20, 30, 40, 50, 60].map((time) => (
+                        <IonButton
+                          key={time}
+                          color="tertiary"
+                          size="small"
+                          onClick={() => {
+                            const newRoutine = [...routine];
+                            const currentSet = newRoutine[index] as Set;
+                            const currentIteration = currentSet.value[setIndex];
+
+                            currentIteration.rest = time;
+
+                            setRoutine(newRoutine);
+                          }}
+                        >
+                          {time}
+                        </IonButton>
+                      ))}
+                    </IonCol>
+                    <IonCol size="5">
                       <IonInput
                         label="Hang"
                         type="number"
@@ -144,6 +220,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         }}
                       />
                     </IonCol>
+
                     <IonCol size="5">
                       <IonInput
                         label="Break"
