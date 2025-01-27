@@ -1,98 +1,26 @@
 import { IonCol, IonGrid, IonLabel, IonRow, IonText } from "@ionic/react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
+import { useActions, useAppState } from "../overmind";
 import AddButton from "./AddButton";
 import DeleteButton from "./DeleteButton";
 import "./NewRoutineContainer.css";
 import NumberInput from "./NumberInput";
 import TimeSelectionsQuickButtons from "./TimeSelectionsQuickButtons";
 import Total from "./Total";
-import { Countdown, Iteration, Recovery, Routine, Set } from "./types";
 
 interface ContainerProps {}
 
 const NewRoutineContainer: React.FC<ContainerProps> = () => {
-  const countdown: Countdown = { type: "countdown", value: 10 };
-  const defaultIteration: Iteration = { hang: 0, rest: 0 };
-  const defaultSet: Set = { type: "set", value: [defaultIteration] };
-  const defaultRecovery: Recovery = { type: "recovery", value: 0 };
-
-  const [routine, setRoutine] = useState<Routine>([countdown, defaultSet]);
-
-  function getLabelForSet(routineIndex: number) {
-    const set = routine[routineIndex] as Set;
-    const iterations = set.value.length;
-    const setsBeforeIndex = routine
-      .slice(0, routineIndex)
-      .filter((item) => item.type === "set").length;
-
-    return `Set ${setsBeforeIndex + 1} - ${iterations} ${
-      iterations === 1 ? "iteration" : "iterations"
-    }`;
-  }
-
-  function onDelete(index: number, setIndex?: number) {
-    const newRoutine = [...routine];
-    const item = newRoutine[index];
-
-    if (item.type !== "set" || item.value.length === 1) {
-      newRoutine.splice(index, 1);
-    } else if (setIndex !== undefined) {
-      item.value.splice(setIndex, 1);
-    }
-
-    setRoutine(newRoutine);
-  }
-
-  function addCountdown() {
-    const newRoutine = [countdown, ...routine];
-
-    setRoutine(newRoutine);
-  }
-
-  function addRecovery(index: number) {
-    const newRoutine = [...routine];
-
-    newRoutine.splice(index + 1, 0, defaultRecovery);
-    setRoutine(newRoutine);
-  }
-
-  function addSet(index: number) {
-    const newRoutine = [...routine];
-
-    newRoutine.splice(index + 1, 0, defaultSet);
-    setRoutine(newRoutine);
-  }
-
-  function addIteration(index: number, setIndex: number) {
-    const newRoutine = [...routine];
-    const currentSet = newRoutine[index] as Set;
-    currentSet.value.splice(setIndex + 1, 0, {
-      ...currentSet.value[setIndex],
-    });
-
-    setRoutine(newRoutine);
-  }
-
-  function onChangeNumberInput(
-    value: number,
-    index: number,
-    setIndex?: number,
-    prop?: keyof Iteration
-  ) {
-    const newRoutine = [...routine];
-
-    if (newRoutine[index].type === "set" && setIndex !== undefined && prop) {
-      const set = newRoutine[index] as Set;
-      const iteration = set.value[setIndex];
-
-      iteration[prop] = value;
-    } else {
-      const item = newRoutine[index];
-      item.value = value;
-    }
-
-    setRoutine(newRoutine);
-  }
+  const { routine } = useAppState();
+  const {
+    addCountdown,
+    addSet,
+    addRecovery,
+    addIteration,
+    onDelete,
+    onChangeNumberInput,
+    getLabelForSet,
+  } = useActions();
 
   return (
     <div style={{ maxWidth: "500px", margin: "auto" }}>
@@ -109,7 +37,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
             <IonCol size="11">
               <AddButton label="Countdown" onAdd={() => addCountdown()} />
               {routine.length === 0 && (
-                <AddButton label="Set" onAdd={() => addSet(0)} />
+                <AddButton label="Set" onAdd={() => addSet({ index: 0 })} />
               )}
             </IonCol>
           </IonRow>
@@ -125,21 +53,23 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <TimeSelectionsQuickButtons
                   routine={routine}
                   index={index}
-                  handleQuickButtonClick={(v) => onChangeNumberInput(v, index)}
+                  handleQuickButtonClick={(v) =>
+                    onChangeNumberInput({ value: v, index })
+                  }
                 />
               </IonCol>
               <IonCol size="10">
                 <NumberInput
                   label="Countdown"
                   value={r.value}
-                  onChange={(v) => onChangeNumberInput(v, index)}
+                  onChange={(v) => onChangeNumberInput({ value: v, index })}
                 />
               </IonCol>
               <IonCol size="1">
-                <DeleteButton onDelete={() => onDelete(index)} />
+                <DeleteButton onDelete={() => onDelete({ index })} />
               </IonCol>
               <IonCol size="11">
-                <AddButton label="Set" onAdd={() => addSet(index)} />
+                <AddButton label="Set" onAdd={() => addSet({ index })} />
               </IonCol>
             </IonRow>
           ) : r.type === "recovery" ? (
@@ -151,28 +81,30 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <TimeSelectionsQuickButtons
                   routine={routine}
                   index={index}
-                  handleQuickButtonClick={(v) => onChangeNumberInput(v, index)}
+                  handleQuickButtonClick={(v) =>
+                    onChangeNumberInput({ value: v, index })
+                  }
                 />
               </IonCol>
               <IonCol size="10">
                 <NumberInput
                   label="Rest"
                   value={r.value}
-                  onChange={(v) => onChangeNumberInput(v, index)}
+                  onChange={(v) => onChangeNumberInput({ value: v, index })}
                 />
               </IonCol>
               <IonCol size="1">
-                <DeleteButton onDelete={() => onDelete(index)} />
+                <DeleteButton onDelete={() => onDelete({ index })} />
               </IonCol>
               <IonCol size="11">
-                <AddButton label="Set" onAdd={() => addSet(index)} />
+                <AddButton label="Set" onAdd={() => addSet({ index })} />
               </IonCol>
             </IonRow>
           ) : r.type === "set" ? (
             <Fragment key={index}>
               <IonRow className="ion-padding">
                 <IonCol>
-                  <IonLabel>{getLabelForSet(index)}</IonLabel>
+                  <IonLabel>{getLabelForSet({ index })}</IonLabel>
                 </IonCol>
                 {r.value.map((set, setIndex) => (
                   <IonRow key={setIndex}>
@@ -183,7 +115,12 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         setIndex={setIndex}
                         prop="hang"
                         handleQuickButtonClick={(v) =>
-                          onChangeNumberInput(v, index, setIndex, "hang")
+                          onChangeNumberInput({
+                            value: v,
+                            index,
+                            setIndex,
+                            prop: "hang",
+                          })
                         }
                       />
                     </IonCol>
@@ -194,7 +131,12 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         setIndex={setIndex}
                         prop="rest"
                         handleQuickButtonClick={(v) =>
-                          onChangeNumberInput(v, index, setIndex, "rest")
+                          onChangeNumberInput({
+                            value: v,
+                            index,
+                            setIndex,
+                            prop: "rest",
+                          })
                         }
                       />
                     </IonCol>
@@ -204,7 +146,12 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         label="Hang"
                         value={set.hang}
                         onChange={(v) =>
-                          onChangeNumberInput(v, index, setIndex, "hang")
+                          onChangeNumberInput({
+                            value: v,
+                            index,
+                            setIndex,
+                            prop: "hang",
+                          })
                         }
                       />
                     </IonCol>
@@ -213,29 +160,37 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         label="Rest"
                         value={set.rest}
                         onChange={(v) =>
-                          onChangeNumberInput(v, index, setIndex, "rest")
+                          onChangeNumberInput({
+                            value: v,
+                            index,
+                            setIndex,
+                            prop: "rest",
+                          })
                         }
                       />
                     </IonCol>
 
                     <IonCol size="1">
                       <DeleteButton
-                        onDelete={() => onDelete(index, setIndex)}
+                        onDelete={() => onDelete({ index, setIndex })}
                       />
                     </IonCol>
                     <IonCol size="11">
                       <AddButton
                         label="Iteration"
-                        onAdd={() => addIteration(index, setIndex)}
+                        onAdd={() => addIteration({ index, setIndex })}
                       />
                       {setIndex === r.value.length - 1 && (
-                        <AddButton label="Set" onAdd={() => addSet(index)} />
+                        <AddButton
+                          label="Set"
+                          onAdd={() => addSet({ index })}
+                        />
                       )}
                       {setIndex === r.value.length - 1 &&
                         routine[index + 1]?.type !== "recovery" && (
                           <AddButton
                             label="Recovery"
-                            onAdd={() => addRecovery(index)}
+                            onAdd={() => addRecovery({ index })}
                           />
                         )}
                     </IonCol>
