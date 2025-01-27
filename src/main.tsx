@@ -1,11 +1,18 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
+import { createOvermind } from "overmind";
+import { Provider } from "overmind-react";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import { config } from "./overmind";
 
-const container = document.getElementById('root');
+const overmind = createOvermind(config);
+
+const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider value={overmind}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );
