@@ -1,15 +1,9 @@
-import {
-  IonCol,
-  IonGrid,
-  IonInput,
-  IonLabel,
-  IonRow,
-  IonText,
-} from "@ionic/react";
+import { IonCol, IonGrid, IonLabel, IonRow, IonText } from "@ionic/react";
 import { Fragment, useState } from "react";
 import AddButton from "./AddButton";
 import DeleteButton from "./DeleteButton";
 import "./NewRoutineContainer.css";
+import NumberInput from "./NumberInput";
 import TimeSelectionsQuickButtons from "./TimeSelectionsQuickButtons";
 import Total from "./Total";
 import { Countdown, Iteration, Recovery, Routine, Set } from "./types";
@@ -79,22 +73,22 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
     setRoutine(newRoutine);
   }
 
-  function handleQuickButtonClick(
-    selectedTime: number,
+  function onChangeNumberInput(
+    value: number,
     index: number,
     setIndex?: number,
     prop?: keyof Iteration
   ) {
     const newRoutine = [...routine];
 
-    if (routine[index].type === "set" && setIndex !== undefined && prop) {
+    if (newRoutine[index].type === "set" && setIndex !== undefined && prop) {
       const set = newRoutine[index] as Set;
       const iteration = set.value[setIndex];
 
-      iteration[prop] = selectedTime;
+      iteration[prop] = value;
     } else {
       const item = newRoutine[index];
-      item.value = selectedTime;
+      item.value = value;
     }
 
     setRoutine(newRoutine);
@@ -131,26 +125,14 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <TimeSelectionsQuickButtons
                   routine={routine}
                   index={index}
-                  handleQuickButtonClick={handleQuickButtonClick}
+                  handleQuickButtonClick={(v) => onChangeNumberInput(v, index)}
                 />
               </IonCol>
               <IonCol size="10">
-                <IonInput
+                <NumberInput
                   label="Countdown"
-                  type="number"
-                  placeholder="0"
-                  min="0"
-                  step="10"
-                  labelPlacement="floating"
-                  fill="outline"
                   value={r.value}
-                  onIonChange={(e) => {
-                    const newRoutine = [...routine];
-                    const newCountdown = newRoutine[index] as Countdown;
-                    newCountdown.value = parseInt(e.detail.value!);
-
-                    setRoutine(newRoutine);
-                  }}
+                  onChange={(v) => onChangeNumberInput(v, index)}
                 />
               </IonCol>
               <IonCol size="1">
@@ -169,26 +151,14 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <TimeSelectionsQuickButtons
                   routine={routine}
                   index={index}
-                  handleQuickButtonClick={handleQuickButtonClick}
+                  handleQuickButtonClick={(v) => onChangeNumberInput(v, index)}
                 />
               </IonCol>
               <IonCol size="10">
-                <IonInput
+                <NumberInput
                   label="Rest"
-                  type="number"
-                  placeholder="0"
-                  min="0"
-                  step="10"
-                  labelPlacement="floating"
-                  fill="outline"
                   value={r.value}
-                  onIonChange={(e) => {
-                    const newRoutine = [...routine];
-                    const newRecovery = newRoutine[index] as Recovery;
-                    newRecovery.value = parseInt(e.detail.value!);
-
-                    setRoutine(newRoutine);
-                  }}
+                  onChange={(v) => onChangeNumberInput(v, index)}
                 />
               </IonCol>
               <IonCol size="1">
@@ -212,7 +182,9 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         index={index}
                         setIndex={setIndex}
                         prop="hang"
-                        handleQuickButtonClick={handleQuickButtonClick}
+                        handleQuickButtonClick={(v) =>
+                          onChangeNumberInput(v, index, setIndex, "hang")
+                        }
                       />
                     </IonCol>
                     <IonCol size="5">
@@ -221,50 +193,31 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                         index={index}
                         setIndex={setIndex}
                         prop="rest"
-                        handleQuickButtonClick={handleQuickButtonClick}
+                        handleQuickButtonClick={(v) =>
+                          onChangeNumberInput(v, index, setIndex, "rest")
+                        }
                       />
                     </IonCol>
+
                     <IonCol size="5">
-                      <IonInput
+                      <NumberInput
                         label="Hang"
-                        type="number"
-                        placeholder="0"
-                        min="0"
-                        step="10"
-                        labelPlacement="floating"
-                        fill="outline"
                         value={set.hang}
-                        onIonChange={(e) => {
-                          const newRoutine = [...routine];
-                          const currentSet = newRoutine[index] as Set;
-                          const currentIteration = currentSet.value[setIndex];
-
-                          currentIteration.hang = parseInt(e.detail.value!);
-                          setRoutine(newRoutine);
-                        }}
+                        onChange={(v) =>
+                          onChangeNumberInput(v, index, setIndex, "hang")
+                        }
                       />
                     </IonCol>
-
                     <IonCol size="5">
-                      <IonInput
+                      <NumberInput
                         label="Rest"
-                        type="number"
-                        placeholder="0"
-                        min="0"
-                        step="10"
-                        labelPlacement="floating"
-                        fill="outline"
                         value={set.rest}
-                        onIonChange={(e) => {
-                          const newRoutine = [...routine];
-                          const currentSet = newRoutine[index] as Set;
-                          const currentIteration = currentSet.value[setIndex];
-
-                          currentIteration.rest = parseInt(e.detail.value!);
-                          setRoutine(newRoutine);
-                        }}
+                        onChange={(v) =>
+                          onChangeNumberInput(v, index, setIndex, "rest")
+                        }
                       />
                     </IonCol>
+
                     <IonCol size="1">
                       <DeleteButton
                         onDelete={() => onDelete(index, setIndex)}

@@ -12,12 +12,7 @@ const TimeSelectionsQuickButtons = ({
   index: number;
   setIndex?: number;
   prop?: keyof Iteration;
-  handleQuickButtonClick: (
-    time: number,
-    index: number,
-    setIndex?: number,
-    prop?: keyof Iteration
-  ) => void;
+  handleQuickButtonClick: (time: number) => void;
 }) => {
   function getButtonColor(
     selectedTime: number,
@@ -39,7 +34,7 @@ const TimeSelectionsQuickButtons = ({
       key={time}
       color={getButtonColor(time, index, setIndex, prop)}
       size="small"
-      onClick={() => handleQuickButtonClick(time, index, setIndex, prop)}
+      onClick={() => handleQuickButtonClick(time)}
     >
       {time}
     </IonButton>
