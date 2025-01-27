@@ -1,5 +1,4 @@
 import {
-  IonButton,
   IonCol,
   IonGrid,
   IonInput,
@@ -11,6 +10,7 @@ import { Fragment, useState } from "react";
 import AddButton from "./AddButton";
 import DeleteButton from "./DeleteButton";
 import "./NewRoutineContainer.css";
+import TimeSelectionsQuickButtons from "./TimeSelectionsQuickButtons";
 import Total from "./Total";
 import { Countdown, Iteration, Recovery, Routine, Set } from "./types";
 
@@ -79,6 +79,27 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
     setRoutine(newRoutine);
   }
 
+  function handleQuickButtonClick(
+    selectedTime: number,
+    index: number,
+    setIndex?: number,
+    prop?: keyof Iteration
+  ) {
+    const newRoutine = [...routine];
+
+    if (routine[index].type === "set" && setIndex !== undefined && prop) {
+      const set = newRoutine[index] as Set;
+      const iteration = set.value[setIndex];
+
+      iteration[prop] = selectedTime;
+    } else {
+      const item = newRoutine[index];
+      item.value = selectedTime;
+    }
+
+    setRoutine(newRoutine);
+  }
+
   return (
     <div style={{ maxWidth: "500px", margin: "auto" }}>
       <IonGrid className="ion-padding">
@@ -103,30 +124,19 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
         {routine.map((r, index) =>
           r.type === "countdown" ? (
             <IonRow className="ion-padding" key={index}>
-              <IonCol size="11">
+              <IonCol>
                 <IonLabel>Start</IonLabel>
               </IonCol>
               <IonCol size="11">
-                {[10, 20, 30, 40, 50, 60].map((time) => (
-                  <IonButton
-                    key={time}
-                    color={time === routine[index].value ? "success" : "light"}
-                    size="small"
-                    onClick={() => {
-                      const newRoutine = [...routine];
-                      const newCountdown = newRoutine[index] as Countdown;
-                      newCountdown.value = time;
-
-                      setRoutine(newRoutine);
-                    }}
-                  >
-                    {time}
-                  </IonButton>
-                ))}
+                <TimeSelectionsQuickButtons
+                  routine={routine}
+                  index={index}
+                  handleQuickButtonClick={handleQuickButtonClick}
+                />
               </IonCol>
               <IonCol size="10">
                 <IonInput
-                  label="Count down"
+                  label="Countdown"
                   type="number"
                   placeholder="0"
                   min="0"
@@ -156,22 +166,11 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                 <IonLabel>Recovery</IonLabel>
               </IonCol>
               <IonCol size="10">
-                {[10, 20, 30, 40, 50, 60].map((time) => (
-                  <IonButton
-                    key={time}
-                    color={time === routine[index].value ? "success" : "light"}
-                    size="small"
-                    onClick={() => {
-                      const newRoutine = [...routine];
-                      const newRecovery = newRoutine[index] as Recovery;
-                      newRecovery.value = time;
-
-                      setRoutine(newRoutine);
-                    }}
-                  >
-                    {time}
-                  </IonButton>
-                ))}
+                <TimeSelectionsQuickButtons
+                  routine={routine}
+                  index={index}
+                  handleQuickButtonClick={handleQuickButtonClick}
+                />
               </IonCol>
               <IonCol size="10">
                 <IonInput
@@ -202,60 +201,28 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
           ) : r.type === "set" ? (
             <Fragment key={index}>
               <IonRow className="ion-padding">
-                <IonCol size="10">
+                <IonCol>
                   <IonLabel>{getLabelForSet(index)}</IonLabel>
                 </IonCol>
                 {r.value.map((set, setIndex) => (
-                  <Fragment key={setIndex}>
+                  <IonRow key={setIndex}>
                     <IonCol size="5">
-                      {[10, 20, 30, 40, 50, 60].map((time) => (
-                        <IonButton
-                          key={time}
-                          color={
-                            time ===
-                            (routine[index] as Set).value[setIndex].hang
-                              ? "success"
-                              : "light"
-                          }
-                          size="small"
-                          onClick={() => {
-                            const newRoutine = [...routine];
-                            const currentSet = newRoutine[index] as Set;
-                            const currentIteration = currentSet.value[setIndex];
-
-                            currentIteration.hang = time;
-
-                            setRoutine(newRoutine);
-                          }}
-                        >
-                          {time}
-                        </IonButton>
-                      ))}
+                      <TimeSelectionsQuickButtons
+                        routine={routine}
+                        index={index}
+                        setIndex={setIndex}
+                        prop="hang"
+                        handleQuickButtonClick={handleQuickButtonClick}
+                      />
                     </IonCol>
                     <IonCol size="5">
-                      {[10, 20, 30, 40, 50, 60].map((time) => (
-                        <IonButton
-                          key={time}
-                          color={
-                            time ===
-                            (routine[index] as Set).value[setIndex].rest
-                              ? "success"
-                              : "light"
-                          }
-                          size="small"
-                          onClick={() => {
-                            const newRoutine = [...routine];
-                            const currentSet = newRoutine[index] as Set;
-                            const currentIteration = currentSet.value[setIndex];
-
-                            currentIteration.rest = time;
-
-                            setRoutine(newRoutine);
-                          }}
-                        >
-                          {time}
-                        </IonButton>
-                      ))}
+                      <TimeSelectionsQuickButtons
+                        routine={routine}
+                        index={index}
+                        setIndex={setIndex}
+                        prop="rest"
+                        handleQuickButtonClick={handleQuickButtonClick}
+                      />
                     </IonCol>
                     <IonCol size="5">
                       <IonInput
@@ -319,7 +286,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
                           />
                         )}
                     </IonCol>
-                  </Fragment>
+                  </IonRow>
                 ))}
               </IonRow>
             </Fragment>
@@ -327,7 +294,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
         )}
 
         <IonRow className="ion-padding">
-          <IonCol size="11">
+          <IonCol>
             <Total routine={routine} />
           </IonCol>
         </IonRow>
