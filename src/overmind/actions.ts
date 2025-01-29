@@ -1,6 +1,13 @@
 import { Context } from ".";
 import { Iteration, Set } from "../components/types";
 
+export const updateName = (
+  { state }: Context,
+  { value }: { value: string }
+) => {
+  state.name = value;
+};
+
 export const addCountdown = ({ state }: Context) => {
   state.routine = [{ type: "countdown", value: 10 }, ...state.routine];
 };

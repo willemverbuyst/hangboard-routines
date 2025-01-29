@@ -1,4 +1,4 @@
-import { IonCol, IonGrid, IonLabel, IonRow, IonText } from "@ionic/react";
+import { IonCol, IonGrid, IonInput, IonLabel, IonRow } from "@ionic/react";
 import { Fragment } from "react";
 import { useActions, useAppState } from "../overmind";
 import AddButton from "./AddButton";
@@ -11,7 +11,7 @@ import Total from "./Total";
 interface ContainerProps {}
 
 const NewRoutineContainer: React.FC<ContainerProps> = () => {
-  const { routine } = useAppState();
+  const { routine, name } = useAppState();
   const {
     addCountdown,
     addSet,
@@ -20,16 +20,22 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
     onDelete,
     onChangeNumberInput,
     getLabelForSet,
+    updateName,
   } = useActions();
 
   return (
     <div style={{ maxWidth: "500px", margin: "auto" }}>
       <IonGrid className="ion-padding">
         <IonRow className="ion-padding">
-          <IonCol>
-            <IonText>
-              <h2>Create a Routine</h2>
-            </IonText>
+          <IonCol size="10">
+            <IonInput
+              type="text"
+              fill="outline"
+              value={name}
+              onIonChange={(e) => updateName({ value: e.detail.value! })}
+              label="name of routine"
+              labelPlacement="floating"
+            />
           </IonCol>
         </IonRow>
         {routine[0]?.type !== "countdown" && (

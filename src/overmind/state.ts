@@ -2,11 +2,13 @@ import { derived } from "overmind";
 import { Countdown, Recovery, Set } from "../components/types";
 
 type State = {
+  name: string;
   routine: Array<Countdown | Set | Recovery>;
   total: string;
 };
 
 export const state: State = {
+  name: "New Routine",
   routine: [
     { type: "countdown", value: 10 },
     {
