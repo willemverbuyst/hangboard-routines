@@ -203,7 +203,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
 
         <IonRow className="ion-padding">
           <IonCol>
-            <Total routine={routine} />
+            <Total />
           </IonCol>
         </IonRow>
       </IonGrid>
