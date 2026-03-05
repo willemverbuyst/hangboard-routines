@@ -1,40 +1,27 @@
 import { derived } from "overmind";
-import { Countdown, Recovery, Set } from "../components/types";
 
 type State = {
   name: string;
-  routine: Array<Countdown | Set | Recovery>;
+  countdown: number;
+  sets: Array<{
+    hang: number;
+    rest: number;
+    iterations: number;
+    recovery: number;
+  }>;
   total: string;
 };
 
 export const state: State = {
   name: "New Routine",
-  routine: [
-    { type: "countdown", value: 10 },
-    {
-      type: "set",
-      value: [{ hang: 0, rest: 0 }],
-    },
-  ],
+  countdown: 10,
+  sets: [{ hang: 10, rest: 50, iterations: 1, recovery: 60 }],
   total: derived((state: State) => {
-    const totalSeconds = state.routine.reduce((total, set) => {
-      switch (set.type) {
-        case "countdown":
-        case "recovery":
-          return total + set.value;
-
-        case "set":
-        default:
-          return (
-            total +
-            set.value.reduce(
-              (setTotal, iteration) =>
-                setTotal + iteration.hang + iteration.rest,
-              0
-            )
-          );
-      }
-    }, 0);
+    const totalSeconds =
+      state.countdown +
+      state.sets.reduce((total, set) => {
+        return (set.hang + set.rest) * set.iterations + set.recovery + total;
+      }, 0);
 
     const minutes =
       Math.floor(totalSeconds / 60) === 1

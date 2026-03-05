@@ -1,101 +1,50 @@
 import { Context } from ".";
-import { Iteration, Set } from "../components/types";
 
 export const updateName = (
   { state }: Context,
-  { value }: { value: string }
+  { value }: { value: string },
 ) => {
   state.name = value;
 };
 
-export const addCountdown = ({ state }: Context) => {
-  state.routine = [{ type: "countdown", value: 10 }, ...state.routine];
-};
-
-export const addRecovery = (
+export const updateCountdown = (
   { state }: Context,
-  { index }: { index: number }
+  { value }: { value: number },
 ) => {
-  const newRoutine = [...state.routine];
-
-  newRoutine.splice(index + 1, 0, { type: "recovery", value: 0 });
-  state.routine = newRoutine;
+  state.countdown = value;
 };
 
-export const addSet = ({ state }: Context, { index }: { index: number }) => {
-  const newRoutine = [...state.routine];
-
-  newRoutine.splice(index + 1, 0, {
-    type: "set",
-    value: [{ hang: 0, rest: 0 }],
-  });
-  state.routine = newRoutine;
-};
-
-export const addIteration = (
+export const updateSetHang = (
   { state }: Context,
-  { index, setIndex }: { index: number; setIndex: number }
+  { index, value }: { index: number; value: number },
 ) => {
-  const newRoutine = [...state.routine];
-  const set = newRoutine[index] as Set;
-  set.value.splice(setIndex + 1, 0, {
-    ...set.value[setIndex],
-  });
-
-  state.routine = newRoutine;
+  state.sets[index].hang = value;
 };
 
-export const onDelete = (
+export const updateSetRest = (
   { state }: Context,
-  { index, setIndex }: { index: number; setIndex?: number }
+  { index, value }: { index: number; value: number },
 ) => {
-  const newRoutine = [...state.routine];
-  const item = newRoutine[index];
-
-  if (item.type !== "set" || item.value.length === 1) {
-    newRoutine.splice(index, 1);
-  } else if (setIndex !== undefined) {
-    item.value.splice(setIndex, 1);
-  }
-
-  state.routine = newRoutine;
+  state.sets[index].rest = value;
 };
 
-export const getLabelForSet = (
+export const updateSetIterations = (
   { state }: Context,
-  { index }: { index: number }
+  { index, value }: { index: number; value: number },
 ) => {
-  const set = state.routine[index] as Set;
-  const iterations = set.value.length;
-  const setsBeforeIndex = state.routine
-    .slice(0, index)
-    .filter((item) => item.type === "set").length;
-
-  return `Set ${setsBeforeIndex + 1} - ${iterations} ${
-    iterations === 1 ? "iteration" : "iterations"
-  }`;
+  state.sets[index].iterations = value;
 };
 
-export const onChangeNumberInput = (
+export const updateSetRecovery = (
   { state }: Context,
-  {
-    value,
-    index,
-    setIndex,
-    prop,
-  }: { value: number; index: number; setIndex?: number; prop?: keyof Iteration }
+  { index, value }: { index: number; value: number },
 ) => {
-  const newRoutine = [...state.routine];
-
-  if (newRoutine[index].type === "set" && setIndex !== undefined && prop) {
-    const set = newRoutine[index] as Set;
-    const iteration = set.value[setIndex];
-
-    iteration[prop] = value;
-  } else {
-    const item = newRoutine[index];
-    item.value = value;
-  }
-
-  state.routine = newRoutine;
+  state.sets[index].recovery = value;
 };
+
+export const addSet = ({ state }: Context) => {
+  state.sets.push({ hang: 10, rest: 50, iterations: 1, recovery: 60 });
+}
+
+
+
