@@ -17,7 +17,7 @@ import "./NewRoutineContainer.css";
 interface ContainerProps {}
 
 const NewRoutineContainer: React.FC<ContainerProps> = () => {
-  const { countdown, name, routine, total } = useAppState();
+  const { countdown, name, routine, total } = useAppState(state => state.newRoutine);
   const {
     updateName,
     updateCountdown,
@@ -27,6 +27,7 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
     addSet,
     remove,
     addRecovery,
+    saveRoutine
   } = useActions();
 
   return (
@@ -183,6 +184,11 @@ const NewRoutineContainer: React.FC<ContainerProps> = () => {
           <IonCol size="12">
             <IonText color="medium">{total}</IonText>
           </IonCol>
+        </IonRow>
+        <IonRow className="ion-padding">
+           <IonButton size="small" color="primary" onClick={saveRoutine}>
+              Save Routine
+            </IonButton>
         </IonRow>
       </IonGrid>
     </div>

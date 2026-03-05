@@ -4,22 +4,22 @@ export const updateName = (
   { state }: Context,
   { value }: { value: string },
 ) => {
-  state.name = value;
+  state.newRoutine.name = value;
 };
 
 export const updateCountdown = (
   { state }: Context,
   { value }: { value: number },
 ) => {
-  state.countdown = value;
+  state.newRoutine.countdown = value;
 };
 
 export const updateHang = (
   { state }: Context,
   { index, value }: { index: number; value: number },
 ) => {
-  if ("hang" in state.routine[index]) {
-    state.routine[index].hang = value;
+  if ("hang" in state.newRoutine.routine[index]) {
+    state.newRoutine.routine[index].hang = value;
   }
 };
 
@@ -27,28 +27,35 @@ export const updateRest = (
   { state }: Context,
   { index, value }: { index: number; value: number },
 ) => {
-  if ("rest" in state.routine[index]) {
-    state.routine[index].rest = value;
+  if ("rest" in state.newRoutine.routine[index]) {
+    state.newRoutine.routine[index].rest = value;
   }
 };
 
 export const addRecovery = ({ state }: Context) => {
-  state.routine.push({ recovery: 10 });
+  state.newRoutine.routine.push({ recovery: 10 });
 };
 
 export const updateRecovery = (
   { state }: Context,
   { index, value }: { index: number; value: number },
 ) => {
-  if ("recovery" in state.routine[index]) {
-    state.routine[index].recovery = value;
+  if ("recovery" in state.newRoutine.routine[index]) {
+    state.newRoutine.routine[index].recovery = value;
   }
 };
 
 export const addSet = ({ state }: Context) => {
-  state.routine.push({ hang: 10, rest: 50 });
+  state.newRoutine.routine.push({ hang: 10, rest: 50 });
 };
 
 export const remove = ({ state }: Context, { index }: { index: number }) => {
-  state.routine.splice(index, 1);
+  state.newRoutine.routine.splice(index, 1);
+};
+
+export const saveRoutine = ({ state }: Context) => {
+  const newRoutine = state.newRoutine;
+  state.myRoutines = [...state.myRoutines, newRoutine];
+
+  localStorage.setItem("myRoutines", JSON.stringify(state.myRoutines));
 };
