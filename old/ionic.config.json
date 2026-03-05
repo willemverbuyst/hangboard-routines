@@ -1,7 +1,0 @@
-{
-  "name": "my-hangboard-app",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}
