@@ -3,24 +3,25 @@ import { derived } from "overmind";
 type State = {
   name: string;
   countdown: number;
-  sets: Array<{
+  routine: Array<{
     hang: number;
     rest: number;
-    iterations: number;
-    recovery: number;
-  }>;
+  } | { recovery: number }>;
   total: string;
 };
 
 export const state: State = {
   name: "New Routine",
   countdown: 10,
-  sets: [{ hang: 10, rest: 50, iterations: 1, recovery: 60 }],
+  routine: [{ hang: 10, rest: 50,}],
   total: derived((state: State) => {
     const totalSeconds =
       state.countdown +
-      state.sets.reduce((total, set) => {
-        return (set.hang + set.rest) * set.iterations + set.recovery + total;
+      state.routine.reduce((total, set) => {
+        if ("recovery" in set) {
+          return set.recovery + total;
+        } 
+        return set.hang + set.rest + total;
       }, 0);
 
     const minutes =

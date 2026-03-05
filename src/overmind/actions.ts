@@ -14,37 +14,41 @@ export const updateCountdown = (
   state.countdown = value;
 };
 
-export const updateSetHang = (
+export const updateHang = (
   { state }: Context,
   { index, value }: { index: number; value: number },
 ) => {
-  state.sets[index].hang = value;
+  if ("hang" in state.routine[index]) {
+    state.routine[index].hang = value;
+  }
 };
 
-export const updateSetRest = (
+export const updateRest = (
   { state }: Context,
   { index, value }: { index: number; value: number },
 ) => {
-  state.sets[index].rest = value;
+  if ("rest" in state.routine[index]) {
+    state.routine[index].rest = value;
+  }
 };
 
-export const updateSetIterations = (
-  { state }: Context,
-  { index, value }: { index: number; value: number },
-) => {
-  state.sets[index].iterations = value;
+export const addRecovery = ({ state }: Context) => {
+  state.routine.push({ recovery: 10 });
 };
 
-export const updateSetRecovery = (
+export const updateRecovery = (
   { state }: Context,
   { index, value }: { index: number; value: number },
 ) => {
-  state.sets[index].recovery = value;
+  if ("recovery" in state.routine[index]) {
+    state.routine[index].recovery = value;
+  }
 };
 
 export const addSet = ({ state }: Context) => {
-  state.sets.push({ hang: 10, rest: 50, iterations: 1, recovery: 60 });
-}
+  state.routine.push({ hang: 10, rest: 50 });
+};
 
-
-
+export const remove = ({ state }: Context, { index }: { index: number }) => {
+  state.routine.splice(index, 1);
+};
