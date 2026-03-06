@@ -143,7 +143,7 @@ onMounted(load)
       </div>
     </div>
     <div v-if="routines.length > 0" class="top-actions">
-      <Button label="New Routine" @click="onCreateNew" />
+      <Button icon="pi pi-plus" label="New Routine" @click="onCreateNew" />
     </div>
   </PageLayout>
 </template>

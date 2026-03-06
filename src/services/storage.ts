@@ -1,6 +1,6 @@
 import type { Routine } from '@/types'
 
-const STORAGE_KEY = 'my-hangboard-app-routines'
+const STORAGE_KEY = 'my-hangboard-routines'
 
 export function getRoutines(): Routine[] {
   try {

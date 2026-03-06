@@ -1,8 +1,8 @@
-# My Hangboard App
+# Hangboard Routines
 
 You are a senior frontend engineer.
 
-Your task is to build a small web application called **My Hangboard App**.
+Your task is to build a small web application called **Hangboard Routines**.
 
 The goal is to produce clean, maintainable code following Vue and TypeScript best practices. Prefer **KISS over over-engineering**, but keep code reasonably DRY.
 
@@ -47,7 +47,7 @@ Routines are stored in **local storage**.
 
 Local storage key:
 
-"my-hangboard-app-routines"
+"my-hangboard-routines"
 
 The stored value is a JSON array of routines.
 

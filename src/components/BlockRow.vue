@@ -48,7 +48,7 @@ function updateRecovery(duration?: number) {
 
 <template>
   <template v-if="modelValue.type === 'iteration'">
-    <Block title="Hang - Rest">
+    <Block title="Hang & Rest">
       <SelectButton
         :model-value="modelValue.hang"
         :options="OPTIONS"

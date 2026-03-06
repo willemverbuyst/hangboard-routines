@@ -57,7 +57,7 @@ const blocks = computed<RoutineBlock[]>({
   },
 })
 
-function addIteration() {
+function addHangRest() {
   blocks.value = [...blocks.value, { type: 'iteration', hang: 10, rest: 50 }]
 }
 
@@ -139,8 +139,8 @@ function onSave() {
 
     <section class="actions-container">
       <div class="actions">
-        <Button severity="contrast" label="Add Iteration" @click="addIteration" />
-        <Button severity="contrast" label="Add Recovery" @click="addRecovery" />
+        <Button severity="contrast" icon="pi pi-plus" label="Hang & Rest" @click="addHangRest" />
+        <Button severity="contrast" icon="pi pi-plus" label="Recovery" @click="addRecovery" />
       </div>
 
       <p class="total-time">{{ totalTimeLabel }}</p>
@@ -177,4 +177,3 @@ function onSave() {
   flex: 1 1 0;
 }
 </style>
-

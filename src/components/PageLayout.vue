@@ -6,7 +6,7 @@ defineProps<{
 
 <template>
   <div class="page">
-    <h1>My Hangboard App</h1>
+    <h1>Hangboard Routines</h1>
     <header>
       <h2>{{ title }}</h2>
     </header>

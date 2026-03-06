@@ -340,12 +340,12 @@ onUnmounted(() => {
         <p>Routine not found. Please go back to My Routines.</p>
       </template>
       <template v-if="hasRoutine && totalStages" #footer>
-        <Button label="Start" @click="startRoutine" :disabled="!canStart" />
-        <Button label="Pause" @click="pauseRoutine" :disabled="!canPause" />
-        <Button label="Stop" severity="secondary" @click="stopRoutine" :disabled="!canStop" />
+        <Button icon="pi pi-play" label="Start" @click="startRoutine" :disabled="!canStart" />
+        <Button icon="pi pi-pause" label="Pause" @click="pauseRoutine" :disabled="!canPause" />
+        <Button icon="pi pi-stop" label="Stop" severity="secondary" @click="stopRoutine" :disabled="!canStop" />
       </template>
     </Block>
-    <Button label="My Routines" @click="$router.push({ name: 'My Routines' })" />
+    <Button icon="pi pi-list" label="My Routines" @click="$router.push({ name: 'My Routines' })" />
   </PageLayout>
 </template>
 
