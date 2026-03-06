@@ -17,7 +17,7 @@ defineProps<{
 
 <style scoped>
 .page {
-  max-width: 40rem;
+  width: 400px;
   margin: 0 auto;
   padding: 1rem;
   display: flex;
@@ -25,6 +25,6 @@ defineProps<{
 }
 header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 </style>

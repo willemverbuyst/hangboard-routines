@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { RoutineBlock } from '@/types';
 import Button from 'primevue/button';
+import Card from 'primevue/card';
 import SelectButton from 'primevue/selectbutton';
 
 const OPTIONS = [10, 20, 30, 40, 50, 60] as const
@@ -33,65 +34,48 @@ function updateRecovery(duration?: number) {
 </script>
 
 <template>
-  <div class="block-row">
-    <template v-if="modelValue.type === 'iteration'">
-      <section class="block-section iteration-section">
-        <header>
-          <h2 class="block-main-label">Iteration</h2>
-        </header>
-        <div class="block-row-item">
-          <label class="block-label" for="iteration-hang">Hang:</label>
-          <SelectButton id="iteration-hang" :model-value="modelValue.hang" :options="OPTIONS.slice()"
+  <template v-if="modelValue.type === 'iteration'">
+    <Card>
+      <template #title>
+        Hang - Rest
+      </template>
+      <template #content>
+        <div class="block-content">
+
+          <SelectButton :model-value="modelValue.hang" :options="OPTIONS.slice()"
             @update:model-value="(v: number) => updateIteration(v, undefined)" />
-        </div>
-        <div class="block-row-item">
-          <label class="block-label" for="iteration-rest">Rest:</label>
-          <SelectButton id="iteration-rest" :model-value="modelValue.rest" :options="OPTIONS.slice()"
+
+          <SelectButton :model-value="modelValue.rest" :options="OPTIONS.slice()"
             @update:model-value="(v: number) => updateIteration(undefined, v)" />
+          <Button icon="pi pi-trash" severity="danger" @click="emit('remove')" />
+
         </div>
-      </section>
-    </template>
-    <template v-else>
-      <section class="block-section recovery-section">
-        <header>
-          <h2 class="block-main-label">Recovery</h2>
-        </header>
-        <div class="block-row-item">
-          <label class="block-label" for="recovery-duration">Duration:</label>
+      </template>
+    </Card>
+  </template>
+  <template v-else>
+    <Card>
+      <template #title>
+        Recovery
+      </template>
+      <template #content>
+        <div class="block-content">
           <SelectButton :model-value="modelValue.duration" :options="OPTIONS.slice()"
             @update:model-value="(v: number) => updateRecovery(v)" />
+          <Button severity="danger" icon="pi pi-trash" @click="emit('remove')" />
         </div>
-      </section>
-    </template>
-    <Button icon="pi pi-trash" severity="secondary" @click="emit('remove')" />
-  </div>
+      </template>
+    </Card>
+  </template>
+
+
 </template>
 
 <style scoped>
-.block-section {
+.block-content {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.block-row-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.block-label {
-  font-weight: 600;
-  min-width: 5rem;
-}
-
-.block-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border: 1px solid var(--p-border-color);
-  border-radius: 4px;
-}
 </style>

@@ -4,11 +4,12 @@ import PageLayout from '@/components/PageLayout.vue'
 import { saveRoutine } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
-import Divider from 'primevue/divider'
+import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import SelectButton from 'primevue/selectbutton'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+
 
 const router = useRouter()
 
@@ -56,21 +57,29 @@ function save() {
 <template>
   <PageLayout title="New Routine">
     <div class="form">
-      <label>Routine name</label>
-      <InputText v-model="name" />
-      <label>Countdown</label>
-      <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
-      <Divider />
-      <label>Blocks</label>
-      <div class="blocks">
-        <BlockRow v-for="(block, i) in blocks" :key="i" :model-value="block"
-          @update:model-value="(b) => updateBlock(i, b)" @remove="removeBlock(i)" />
-        <div class="block-actions">
-          <Button label="Add Iteration" @click="addIteration" />
-          <Button label="Add Recovery" @click="addRecovery" />
+      <Card>
+        <template #title>Name</template>
+        <template #content>
+          <InputText v-model="name" />
+        </template>
+      </Card>
+      <Card>
+        <template #title>Countdown</template>
+        <template #content>
+          <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
+        </template>
+      </Card>
+
+      <BlockRow v-for="(block, i) in blocks" :key="i" :model-value="block"
+        @update:model-value="(b) => updateBlock(i, b)" @remove="removeBlock(i)" />
+      <section>
+        <div class="actions">
+          <Button severity="contrast" label="Add Iteration" @click="addIteration" />
+          <Button severity="contrast" label="Add Recovery" @click="addRecovery" />
         </div>
-      </div>
-      <Button label="Save Routine" @click="save" />
+
+        <Button label="Save Routine" @click="save" />
+      </section>
     </div>
   </PageLayout>
 </template>
@@ -82,17 +91,13 @@ function save() {
   gap: 0.75rem;
 }
 
-.form label {
-  font-weight: 600;
-}
-
-.blocks {
+section {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.block-actions {
+.actions {
   display: flex;
   gap: 0.5rem;
 }
