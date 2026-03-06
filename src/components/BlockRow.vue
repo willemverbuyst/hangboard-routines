@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
-import SelectButton from 'primevue/selectbutton'
-import type { RoutineBlock } from '@/types'
+import type { RoutineBlock } from '@/types';
+import Button from 'primevue/button';
+import SelectButton from 'primevue/selectbutton';
 
 const OPTIONS = [10, 20, 30, 40, 50, 60] as const
 
@@ -35,34 +35,56 @@ function updateRecovery(duration?: number) {
 <template>
   <div class="block-row">
     <template v-if="modelValue.type === 'iteration'">
-      <span class="label">Iteration</span>
-      <span>Hang:</span>
-      <SelectButton
-        :model-value="modelValue.hang"
-        :options="OPTIONS.slice()"
-        @update:model-value="(v: number) => updateIteration(v, undefined)"
-      />
-      <span>Rest:</span>
-      <SelectButton
-        :model-value="modelValue.rest"
-        :options="OPTIONS.slice()"
-        @update:model-value="(v: number) => updateIteration(undefined, v)"
-      />
+      <section class="block-section iteration-section">
+        <header>
+          <h2 class="block-main-label">Iteration</h2>
+        </header>
+        <div class="block-row-item">
+          <label class="block-label" for="iteration-hang">Hang:</label>
+          <SelectButton id="iteration-hang" :model-value="modelValue.hang" :options="OPTIONS.slice()"
+            @update:model-value="(v: number) => updateIteration(v, undefined)" />
+        </div>
+        <div class="block-row-item">
+          <label class="block-label" for="iteration-rest">Rest:</label>
+          <SelectButton id="iteration-rest" :model-value="modelValue.rest" :options="OPTIONS.slice()"
+            @update:model-value="(v: number) => updateIteration(undefined, v)" />
+        </div>
+      </section>
     </template>
     <template v-else>
-      <span class="label">Recovery</span>
-      <span>Duration:</span>
-      <SelectButton
-        :model-value="modelValue.duration"
-        :options="OPTIONS.slice()"
-        @update:model-value="(v: number) => updateRecovery(v)"
-      />
+      <section class="block-section recovery-section">
+        <header>
+          <h2 class="block-main-label">Recovery</h2>
+        </header>
+        <div class="block-row-item">
+          <label class="block-label" for="recovery-duration">Duration:</label>
+          <SelectButton :model-value="modelValue.duration" :options="OPTIONS.slice()"
+            @update:model-value="(v: number) => updateRecovery(v)" />
+        </div>
+      </section>
     </template>
     <Button icon="pi pi-trash" severity="secondary" @click="emit('remove')" />
   </div>
 </template>
 
 <style scoped>
+.block-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.block-row-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.block-label {
+  font-weight: 600;
+  min-width: 5rem;
+}
+
 .block-row {
   display: flex;
   flex-wrap: wrap;
@@ -71,9 +93,5 @@ function updateRecovery(duration?: number) {
   padding: 0.5rem;
   border: 1px solid var(--p-border-color);
   border-radius: 4px;
-}
-.label {
-  font-weight: 600;
-  min-width: 5rem;
 }
 </style>

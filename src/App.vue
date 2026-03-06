@@ -19,6 +19,8 @@ body {
 <style scoped>
 .app {
   min-height: 100vh;
-  padding: 1rem;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import BlockRow from '@/components/BlockRow.vue'
+import PageLayout from '@/components/PageLayout.vue'
+import { getRoutineById, saveRoutine } from '@/services/storage'
+import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
 import Divider from 'primevue/divider'
 import InputText from 'primevue/inputtext'
 import SelectButton from 'primevue/selectbutton'
-import { getRoutineById, saveRoutine } from '@/services/storage'
-import type { Routine, RoutineBlock } from '@/types'
-import BlockRow from '@/components/BlockRow.vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
@@ -66,8 +67,7 @@ onMounted(load)
 </script>
 
 <template>
-  <div class="page">
-    <h1>Edit Routine</h1>
+  <PageLayout title="Edit Routine">
     <div class="form">
       <label>Routine name</label>
       <InputText v-model="name" />
@@ -90,17 +90,10 @@ onMounted(load)
       </div>
       <Button label="Save Routine" @click="save" />
     </div>
-  </div>
+  </PageLayout>
 </template>
 
 <style scoped>
-.page {
-  max-width: 40rem;
-  margin: 0 auto;
-}
-h1 {
-  margin-bottom: 1rem;
-}
 .form {
   display: flex;
   flex-direction: column;

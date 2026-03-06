@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import Button from 'primevue/button'
-import Card from 'primevue/card'
+import PageLayout from '@/components/PageLayout.vue'
 import { deleteRoutineById, getRoutines } from '@/services/storage'
 import type { Routine } from '@/types'
+import Button from 'primevue/button'
+import Card from 'primevue/card'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const routines = ref<Routine[]>([])
@@ -30,8 +31,7 @@ onMounted(load)
 </script>
 
 <template>
-  <div class="page">
-    <h1>My Routines</h1>
+  <PageLayout title="My Routines">
     <template v-if="routines.length === 0">
       <Card>
         <template #content>
@@ -56,17 +56,10 @@ onMounted(load)
         </Card>
       </div>
     </template>
-  </div>
+  </PageLayout>
 </template>
 
 <style scoped>
-.page {
-  max-width: 40rem;
-  margin: 0 auto;
-}
-h1 {
-  margin-bottom: 1rem;
-}
 .routine-list {
   display: flex;
   flex-direction: column;

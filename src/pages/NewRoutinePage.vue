@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import BlockRow from '@/components/BlockRow.vue'
+import PageLayout from '@/components/PageLayout.vue'
+import { saveRoutine } from '@/services/storage'
+import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
 import Divider from 'primevue/divider'
 import InputText from 'primevue/inputtext'
 import SelectButton from 'primevue/selectbutton'
-import { saveRoutine } from '@/services/storage'
-import type { Routine, RoutineBlock } from '@/types'
-import BlockRow from '@/components/BlockRow.vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -53,8 +54,7 @@ function save() {
 </script>
 
 <template>
-  <div class="page">
-    <h1>New Routine</h1>
+  <PageLayout title="New Routine">
     <div class="form">
       <label>Routine name</label>
       <InputText v-model="name" />
@@ -63,13 +63,8 @@ function save() {
       <Divider />
       <label>Blocks</label>
       <div class="blocks">
-        <BlockRow
-          v-for="(block, i) in blocks"
-          :key="i"
-          :model-value="block"
-          @update:model-value="(b) => updateBlock(i, b)"
-          @remove="removeBlock(i)"
-        />
+        <BlockRow v-for="(block, i) in blocks" :key="i" :model-value="block"
+          @update:model-value="(b) => updateBlock(i, b)" @remove="removeBlock(i)" />
         <div class="block-actions">
           <Button label="Add Iteration" @click="addIteration" />
           <Button label="Add Recovery" @click="addRecovery" />
@@ -77,30 +72,26 @@ function save() {
       </div>
       <Button label="Save Routine" @click="save" />
     </div>
-  </div>
+  </PageLayout>
 </template>
 
 <style scoped>
-.page {
-  max-width: 40rem;
-  margin: 0 auto;
-}
-h1 {
-  margin-bottom: 1rem;
-}
 .form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+
 .form label {
   font-weight: 600;
 }
+
 .blocks {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
+
 .block-actions {
   display: flex;
   gap: 0.5rem;
