@@ -2,7 +2,7 @@
 import Block from '@/components/BlockComponent.vue'
 import PageLayout from '@/components/PageLayout.vue'
 import { getRoutineById } from '@/services/storage'
-import type { Routine } from '@/types'
+import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
 import { computed, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -28,6 +28,32 @@ const routine = computed<Routine | undefined>(() => {
 })
 
 const pageTitle = computed(() => (routine.value ? routine.value.name : 'Routine not found'))
+
+function totalSecondsForBlock(block: RoutineBlock): number {
+  if (block.type === 'recovery') return block.duration
+  return block.hang + block.rest
+}
+
+function formatDuration(totalSeconds: number): string {
+  const mins = Math.floor(totalSeconds / 60)
+  const secs = totalSeconds % 60
+  if (mins === 0) return `${secs}s`
+  if (secs === 0) return mins === 1 ? '1 min' : `${mins} min`
+  return `${mins}m ${secs}s`
+}
+
+function formatBlockDescription(block: RoutineBlock): string {
+  if (block.type === 'iteration') {
+    return `${block.hang}s hang, ${block.rest}s rest`
+  }
+  return `${block.duration}s`
+}
+
+function routineTotalFormatted(r?: Routine): string {
+  if (!r) return '--'
+  const totalSeconds = r.countdown + r.blocks.reduce((sum, b) => sum + totalSecondsForBlock(b), 0)
+  return formatDuration(totalSeconds)
+}
 
 const stages = computed<Stage[]>(() => {
   const current = routine.value
@@ -223,6 +249,24 @@ onUnmounted(() => {
           </div>
         </div>
       </template>
+      <div v-if="hasRoutine" class="routine-steps">
+        <div class="step">
+          <span class="step-title">Countdown</span>
+          <span class="step-value">{{ formatDuration(routine?.countdown ?? 0) }}</span>
+        </div>
+        <div v-for="(block, i) in routine?.blocks ?? []" :key="i" class="step">
+          <span class="step-title">{{
+            block.type === 'iteration' ? 'Hang - Rest' : 'Recovery'
+          }}</span>
+          <span class="step-value">{{ formatBlockDescription(block) }}</span>
+        </div>
+        <div class="step total-time">
+          <span class="step-title">Total</span>
+          <span class="step-value">{{ routineTotalFormatted(routine) }}</span>
+        </div>
+      </div>
+      
+      
       <template v-else>
         <p>Routine not found. Please go back to My Routines.</p>
       </template>
@@ -244,5 +288,34 @@ onUnmounted(() => {
   text-align: center;
   color: var(--p-primary-color, #2563eb);
   margin-bottom: 0.5rem;
+}
+
+.routine-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem;
+}
+
+.step {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.step-title {
+  font-weight: 800;
+}
+
+.step-value {
+  font-weight: 500;
+}
+
+.total-time {
+  margin: 0.25rem 0 0;
+  padding: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--p-text-muted-color);
+  text-align: center;
+  border-top: 1px solid var(--p-surface-200);
 }
 </style>
