@@ -144,7 +144,7 @@ function onSave() {
 
       <p class="total-time">{{ totalTimeLabel }}</p>
       <div class="actions">
-        <Button label="Cancel" severity="secondary" @click="onCancel" class="half-width-btn" />
+        <Button label="Cancel" severity="danger" @click="onCancel" class="half-width-btn" />
         <Button label="Save Routine" @click="onSave" class="half-width-btn" />
       </div>
     </section>

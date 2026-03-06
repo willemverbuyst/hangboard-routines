@@ -77,7 +77,7 @@ function updateRecovery(duration?: number) {
           :disabled="!canMoveDown"
           @click="emit('moveDown')"
         />
-        <Button icon="pi pi-trash" severity="danger" @click="emit('remove')" />
+        <Button icon="pi pi-trash" severity="secondary" @click="emit('remove')" />
       </template>
     </Block>
   </template>
@@ -103,7 +103,7 @@ function updateRecovery(duration?: number) {
           :disabled="!canMoveDown"
           @click="emit('moveDown')"
         />
-        <Button severity="danger" icon="pi pi-trash" @click="emit('remove')" />
+        <Button severity="secondary" icon="pi pi-trash" @click="emit('remove')" />
       </template>
     </Block>
   </template>

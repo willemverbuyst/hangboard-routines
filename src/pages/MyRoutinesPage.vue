@@ -113,8 +113,8 @@ onMounted(load)
             </div>
           </div>
           <template #footer>
-            <Button label="Select" icon="pi pi-check" @click="onSelect(r.id)" />
-            <Button label="Edit" icon="pi pi-pencil" @click="onEdit(r.id)" />
+            <Button label="Select" severity="secondary" icon="pi pi-check" @click="onSelect(r.id)" />
+            <Button label="Edit" severity="secondary" icon="pi pi-pencil" @click="onEdit(r.id)" />
             <Button
               label="Delete"
               icon="pi pi-trash"
