@@ -14,7 +14,11 @@ export function getRoutines(): Routine[] {
 }
 
 export function setRoutines(routines: Routine[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(routines))
+  if (routines.length === 0) {
+    localStorage.removeItem(STORAGE_KEY)
+  } else {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(routines))
+  }
 }
 
 export function getRoutineById(id: string): Routine | undefined {

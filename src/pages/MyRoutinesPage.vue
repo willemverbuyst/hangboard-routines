@@ -4,7 +4,7 @@ import { deleteRoutineById, getRoutines } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -58,6 +58,9 @@ onMounted(load)
 
 <template>
   <PageLayout title="My Routines">
+    <div v-if="routines.length > 0" class="top-actions">
+      <Button label="New Routine" @click="onCreateNew" />
+    </div>
     <template v-if="routines.length === 0">
       <Card>
         <template #content>
@@ -109,6 +112,10 @@ onMounted(load)
 </template>
 
 <style scoped>
+.top-actions {
+  margin-bottom: 1rem;
+}
+
 .routine-list {
   display: grid;
   grid-template-columns: 1fr;

@@ -77,5 +77,4 @@ function updateRecovery(duration?: number) {
   flex-direction: column;
   gap: 0.5rem;
 }
-
 </style>

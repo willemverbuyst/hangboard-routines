@@ -4,7 +4,7 @@ import PageLayout from '@/components/PageLayout.vue'
 import { getRoutineById, saveRoutine } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
-import Divider from 'primevue/divider'
+import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import SelectButton from 'primevue/selectbutton'
 import { ref, onMounted, computed } from 'vue'
@@ -50,6 +50,38 @@ function updateBlock(index: number, block: RoutineBlock) {
   blocks.value = next
 }
 
+const totalTimeLabel = computed(() => {
+  const totalSeconds =
+    countdown.value +
+    blocks.value.reduce((total, set) => {
+      if (set.type === 'recovery') {
+        return set.duration + total
+      }
+      return set.hang + set.rest + total
+    }, 0)
+
+  const mins = Math.floor(totalSeconds / 60)
+  const secs = totalSeconds % 60
+  const minutesStr =
+    mins === 0
+      ? ''
+      : mins === 1
+        ? '1 minute'
+        : `${mins} minutes`
+  const secondsStr =
+    secs === 0 ? '' : secs === 1 ? '1 second' : `${secs} seconds`
+  const humanReadable =
+    minutesStr && secondsStr
+      ? `${minutesStr} and ${secondsStr}`
+      : minutesStr || secondsStr || '0 seconds'
+
+  return `Total: ${totalSeconds} seconds | ${humanReadable}`
+})
+
+function cancel() {
+  router.push({ name: 'My Routines' })
+}
+
 function save() {
   const trimmed = name.value.trim()
   if (!trimmed) return
@@ -68,47 +100,57 @@ onMounted(load)
 
 <template>
   <PageLayout title="Edit Routine">
-    <div class="form">
-      <label>Routine name</label>
-      <InputText v-model="name" />
-      <label>Countdown</label>
-      <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
-      <Divider />
-      <label>Blocks</label>
-      <div class="blocks">
-        <BlockRow
-          v-for="(block, i) in blocks"
-          :key="i"
-          :model-value="block"
-          @update:model-value="(b) => updateBlock(i, b)"
-          @remove="removeBlock(i)"
-        />
-        <div class="block-actions">
-          <Button label="Add Iteration" @click="addIteration" />
-          <Button label="Add Recovery" @click="addRecovery" />
-        </div>
+    <Card>
+      <template #title>Name</template>
+      <template #content>
+        <InputText v-model="name" placeholder="Name of routine" />
+      </template>
+    </Card>
+    <Card>
+      <template #title>Countdown</template>
+      <template #content>
+        <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
+      </template>
+    </Card>
+
+    <BlockRow v-for="(block, i) in blocks" :key="i" :model-value="block" @update:model-value="(b) => updateBlock(i, b)"
+      @remove="removeBlock(i)" />
+    <section class="actions-container">
+      <div class="actions">
+        <Button severity="contrast" label="Add Iteration" @click="addIteration" />
+        <Button severity="contrast" label="Add Recovery" @click="addRecovery" />
       </div>
-      <Button label="Save Routine" @click="save" />
-    </div>
+
+      <p class="total-time">{{ totalTimeLabel }}</p>
+      <div class="actions">
+        <Button label="Cancel" severity="secondary" @click="cancel" class="half-width-btn" />
+        <Button label="Save Routine" @click="save" class="half-width-btn" />
+      </div>
+    </section>
   </PageLayout>
 </template>
 
 <style scoped>
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-.form label {
-  font-weight: 600;
-}
-.blocks {
+.actions-container {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding-top: 0.5rem;
 }
-.block-actions {
+
+.total-time {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--p-text-muted-color);
+}
+
+.actions {
   display: flex;
   gap: 0.5rem;
+}
+
+.actions button {
+  flex: 1 1 0;
 }
 </style>

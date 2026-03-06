@@ -9,7 +9,7 @@ defineProps<{
     <header>
       <h1>{{ title }}</h1>
     </header>
-    <main>
+    <main class="page-content">
       <slot />
     </main>
   </div>
@@ -26,5 +26,12 @@ defineProps<{
 header {
   text-align: center;
   margin-bottom: 1rem;
+}
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  width: 100%;
 }
 </style>

@@ -87,45 +87,37 @@ function save() {
 
 <template>
   <PageLayout title="New Routine">
-    <div class="form">
-      <Card>
-        <template #title>Name</template>
-        <template #content>
-          <InputText v-model="name" placeholder="Name of new routine" />
-        </template>
-      </Card>
-      <Card>
-        <template #title>Countdown</template>
-        <template #content>
-          <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
-        </template>
-      </Card>
+    <Card>
+      <template #title>Name</template>
+      <template #content>
+        <InputText v-model="name" placeholder="Name of new routine" />
+      </template>
+    </Card>
+    <Card>
+      <template #title>Countdown</template>
+      <template #content>
+        <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
+      </template>
+    </Card>
 
-      <BlockRow v-for="(block, i) in blocks" :key="i" :model-value="block"
-        @update:model-value="(b) => updateBlock(i, b)" @remove="removeBlock(i)" />
-      <section class="actions-container">
-        <div class="actions">
-          <Button severity="contrast" label="Add Iteration" @click="addIteration" />
-          <Button severity="contrast" label="Add Recovery" @click="addRecovery" />
-        </div>
+    <BlockRow v-for="(block, i) in blocks" :key="i" :model-value="block" @update:model-value="(b) => updateBlock(i, b)"
+      @remove="removeBlock(i)" />
+    <section class="actions-container">
+      <div class="actions">
+        <Button severity="contrast" label="Add Iteration" @click="addIteration" />
+        <Button severity="contrast" label="Add Recovery" @click="addRecovery" />
+      </div>
 
-        <p class="total-time">{{ totalTimeLabel }}</p>
-        <div class="actions">
-          <Button label="Cancel" severity="secondary" @click="cancel" class="half-width-btn" />
-          <Button label="Save Routine" @click="save" class="half-width-btn" />
-        </div>
-      </section>
-    </div>
+      <p class="total-time">{{ totalTimeLabel }}</p>
+      <div class="actions">
+        <Button label="Cancel" severity="secondary" @click="cancel" class="half-width-btn" />
+        <Button label="Save Routine" @click="save" class="half-width-btn" />
+      </div>
+    </section>
   </PageLayout>
 </template>
 
 <style scoped>
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .actions-container {
   display: flex;
   flex-direction: column;
