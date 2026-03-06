@@ -14,6 +14,12 @@ type Stage = {
   duration: number
 }
 
+type DisplayStep = {
+  label: string
+  value: string
+  stageIndex: number | null
+}
+
 const route = useRoute()
 
 const routine = computed<Routine | undefined>(() => {
@@ -91,6 +97,66 @@ const currentStage = computed<Stage | null>(() => {
   const index = currentStageIndex.value
   if (index < 0 || index >= list.length) return null
   return list[index] ?? null
+})
+
+const displaySteps = computed<DisplayStep[]>(() => {
+  const currentRoutine = routine.value
+  const stageList = stages.value
+
+  if (!currentRoutine) return []
+
+  const items: DisplayStep[] = []
+  let stageCursor = 0
+
+  const takeStageIndex = (type: StageType, hasDuration: boolean): number | null => {
+    if (!hasDuration) return null
+
+    while (stageCursor < stageList.length) {
+      const idx = stageCursor
+      const stage = stageList[stageCursor]!
+      stageCursor += 1
+
+      if (stage.type === type) {
+        return idx
+      }
+    }
+
+    return null
+  }
+
+  const countdownSeconds = currentRoutine.countdown ?? 0
+  items.push({
+    label: 'Countdown',
+    value: formatDuration(countdownSeconds),
+    stageIndex: takeStageIndex('countdown', countdownSeconds > 0),
+  })
+
+  for (const block of currentRoutine.blocks) {
+    if (block.type === 'iteration') {
+      const hangSeconds = block.hang ?? 0
+      items.push({
+        label: 'Hang',
+        value: `${hangSeconds}s`,
+        stageIndex: takeStageIndex('hang', hangSeconds > 0),
+      })
+
+      const restSeconds = block.rest ?? 0
+      items.push({
+        label: 'Rest',
+        value: `${restSeconds}s`,
+        stageIndex: takeStageIndex('rest', restSeconds > 0),
+      })
+    } else if (block.type === 'recovery') {
+      const recoverySeconds = block.duration ?? 0
+      items.push({
+        label: 'Recovery',
+        value: `${recoverySeconds}s`,
+        stageIndex: takeStageIndex('recovery', recoverySeconds > 0),
+      })
+    }
+  }
+
+  return items
 })
 
 const stageTitle = computed(() => {
@@ -244,27 +310,25 @@ onUnmounted(() => {
         </div>
       </template>
       <div v-if="hasRoutine" class="routine-steps">
-        <div class="step">
-          <span class="step-title">Countdown</span>
-          <span class="step-value">{{ formatDuration(routine?.countdown ?? 0) }}</span>
-        </div>
-        <div v-for="(block, i) in routine?.blocks ?? []" :key="i">
-          <div v-if="block.type === 'iteration'">
-            <div class="step">
-              <span class="step-title">Hang</span>
-              <span class="step-value">{{ block.hang }}s</span>
-            </div>
-            <div class="step">
-              <span class="step-title">Rest</span>
-              <span class="step-value">{{ block.rest }}s</span>
-            </div>
-          </div>
-          <div v-else-if="block.type === 'recovery'">
-            <div class="step">
-              <span class="step-title">Recovery</span>
-              <span class="step-value">{{ block.duration }}s</span>
-            </div>
-          </div>
+        <div
+          v-for="(step, i) in displaySteps"
+          :key="i"
+          class="step"
+          style="position: relative; min-height: 1.5em;"
+        >
+          <span
+            v-if="step.stageIndex !== null"
+            style="position: absolute; left: .2em; top: .4em; width: 1em; display: flex; justify-content: center; align-items: flex-start; height: 100%;"
+            aria-hidden="true"
+          >
+            <span
+              v-if="step.stageIndex === currentStageIndex && status !== 'idle' && status !== 'finished'"
+              class="step-indicator"
+              style="position: relative; top: 0.1em;"
+            ></span>
+          </span>
+          <span class="step-title" :style="{ marginLeft: '1.3em' }">{{ step.label }}</span>
+          <span class="step-value">{{ step.value }}</span>
         </div>
         <div class="step total-time">
           <span class="step-title">Total</span>
@@ -304,7 +368,15 @@ onUnmounted(() => {
 
 .step {
   display: flex;
-  gap: 0.25rem;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.step-indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background-color: var(--p-primary-color, #22c55e);
 }
 
 .step-title {
