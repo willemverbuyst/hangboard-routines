@@ -6,8 +6,9 @@ defineProps<{
 
 <template>
   <div class="page">
+    <h1>My Hangboard App</h1>
     <header>
-      <h1>{{ title }}</h1>
+      <h2>{{ title }}</h2>
     </header>
     <main class="page-content">
       <slot />
@@ -23,7 +24,7 @@ defineProps<{
   display: flex;
   flex-direction: column;
 }
-header {
+h1, h2 {
   text-align: center;
   margin-bottom: 1rem;
 }

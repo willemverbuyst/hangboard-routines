@@ -57,9 +57,7 @@ onMounted(load)
 
 <template>
   <PageLayout title="My Routines">
-    <div v-if="routines.length > 0" class="top-actions">
-      <Button label="New Routine" @click="onCreateNew" />
-    </div>
+    
     <template v-if="routines.length === 0">
       <Block title="No routines yet">
         <Button label="Create New Routine" @click="onCreateNew" />
@@ -97,6 +95,9 @@ onMounted(load)
         </Block>
       </div>
     </template>
+    <div v-if="routines.length > 0" class="top-actions">
+      <Button label="New Routine" @click="onCreateNew" />
+    </div>
   </PageLayout>
 </template>
 
