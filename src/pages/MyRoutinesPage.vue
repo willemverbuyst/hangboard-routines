@@ -9,6 +9,9 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const routines = ref<Routine[]>([])
+const showDeleteConfirm = ref(false)
+const routineIdToDelete = ref<string | null>(null)
+const routineNameToDelete = ref('')
 
 function load() {
   routines.value = getRoutines()
@@ -18,9 +21,27 @@ function onEdit(id: string) {
   router.push({ name: 'Edit Routine', params: { id } })
 }
 
-function onDelete(id: string) {
-  deleteRoutineById(id)
-  load()
+function askDelete(id: string) {
+  const routine = routines.value.find((r) => r.id === id)
+  routineNameToDelete.value = routine?.name ?? ''
+  routineIdToDelete.value = id
+  showDeleteConfirm.value = true
+}
+
+function confirmDelete() {
+  if (routineIdToDelete.value) {
+    deleteRoutineById(routineIdToDelete.value)
+    load()
+  }
+  showDeleteConfirm.value = false
+  routineIdToDelete.value = null
+  routineNameToDelete.value = ''
+}
+
+function cancelDelete() {
+  showDeleteConfirm.value = false
+  routineIdToDelete.value = null
+  routineNameToDelete.value = ''
 }
 
 function onCreateNew() {
@@ -89,12 +110,27 @@ onMounted(load)
               label="Delete"
               icon="pi pi-trash"
               severity="secondary"
-              @click="onDelete(r.id)"
+              @click="askDelete(r.id)"
             />
           </template>
         </Block>
       </div>
     </template>
+    <div v-if="showDeleteConfirm" class="modal-backdrop">
+      <div class="modal">
+        <h2 class="modal-title">Delete routine?</h2>
+        <p class="modal-text">
+          Are you sure you want to delete
+          <span v-if="routineNameToDelete" class="modal-routine-name">"{{ routineNameToDelete }}"</span>
+          <span v-else>this routine</span>
+          ? This action cannot be undone.
+        </p>
+        <div class="modal-actions">
+          <Button label="Cancel" severity="secondary" @click="cancelDelete" />
+          <Button label="Delete" icon="pi pi-trash" severity="danger" @click="confirmDelete" />
+        </div>
+      </div>
+    </div>
     <div v-if="routines.length > 0" class="top-actions">
       <Button label="New Routine" @click="onCreateNew" />
     </div>
@@ -139,5 +175,46 @@ onMounted(load)
   color: var(--p-text-muted-color);
   text-align: center;
   border-top: 1px solid var(--p-surface-200);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+}
+
+.modal {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 1.5rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.modal-title {
+  margin: 0 0 0.75rem;
+  text-align: center;
+}
+
+.modal-text {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+}
+
+.modal-routine-name {
+  font-weight: 700;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
 }
 </style>
