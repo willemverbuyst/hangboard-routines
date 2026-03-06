@@ -14,7 +14,7 @@ const router = useRouter()
 
 const OPTIONS = [10, 20, 30, 40, 50, 60] as const
 
-const name = ref('Name of new routine')
+const name = ref('')
 const countdown = ref(10)
 const blocks = ref<RoutineBlock[]>([
   { type: 'iteration', hang: 10, rest: 50 },
@@ -91,7 +91,7 @@ function save() {
       <Card>
         <template #title>Name</template>
         <template #content>
-          <InputText v-model="name" />
+          <InputText v-model="name" placeholder="Name of new routine" />
         </template>
       </Card>
       <Card>
