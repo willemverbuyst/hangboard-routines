@@ -57,6 +57,7 @@ const hasFooter = computed(() => !!slots.footer || !props.footer)
 
 .block-footer {
   display: flex;
+  gap: 0.5rem;
   justify-content: center;
 }
 </style>

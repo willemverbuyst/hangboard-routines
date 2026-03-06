@@ -8,11 +8,15 @@ const OPTIONS = [10, 20, 30, 40, 50, 60] as const
 
 const props = defineProps<{
   modelValue: RoutineBlock
+  canMoveUp?: boolean
+  canMoveDown?: boolean
 }>()
 
 const emit = defineEmits<{
   'update:modelValue': [value: RoutineBlock]
   remove: []
+  moveUp: []
+  moveDown: []
 }>()
 
 function updateIteration(hang?: number, rest?: number) {
@@ -48,6 +52,18 @@ function updateRecovery(duration?: number) {
         @update:model-value="(v: number) => updateIteration(undefined, v)"
       />
       <template #footer>
+        <Button
+          icon="pi pi-arrow-up"
+          severity="secondary"
+          :disabled="!canMoveUp"
+          @click="emit('moveUp')"
+        />
+        <Button
+          icon="pi pi-arrow-down"
+          severity="secondary"
+          :disabled="!canMoveDown"
+          @click="emit('moveDown')"
+        />
         <Button icon="pi pi-trash" severity="danger" @click="emit('remove')" />
       </template>
     </Block>
@@ -60,6 +76,18 @@ function updateRecovery(duration?: number) {
         @update:model-value="(v: number) => updateRecovery(v)"
       />
       <template #footer>
+        <Button
+          icon="pi pi-arrow-up"
+          severity="secondary"
+          :disabled="!canMoveUp"
+          @click="emit('moveUp')"
+        />
+        <Button
+          icon="pi pi-arrow-down"
+          severity="secondary"
+          :disabled="!canMoveDown"
+          @click="emit('moveDown')"
+        />
         <Button severity="danger" icon="pi pi-trash" @click="emit('remove')" />
       </template>
     </Block>

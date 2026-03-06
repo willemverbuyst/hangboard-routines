@@ -48,8 +48,7 @@ function formatBlockDescription(block: RoutineBlock): string {
 }
 
 function routineTotalFormatted(r: Routine): string {
-  const totalSeconds =
-    r.countdown + r.blocks.reduce((sum, b) => sum + totalSecondsForBlock(b), 0)
+  const totalSeconds = r.countdown + r.blocks.reduce((sum, b) => sum + totalSecondsForBlock(b), 0)
   return formatDuration(totalSeconds)
 }
 
@@ -70,26 +69,23 @@ onMounted(load)
       <div class="routine-list">
         <Block v-for="r in routines" :key="r.id" class="routine-card">
           <template #title>{{ r.name }}</template>
-            <div class="routine-steps">
-              <div class="step">
-                <span class="step-title">Countdown</span>
-                <span class="step-value">{{ formatDuration(r.countdown) }}</span>
-              </div>
-              <div
-                v-for="(block, i) in r.blocks"
-                :key="i"
-                class="step"
-              >
-                <span class="step-title">{{ block.type === 'iteration' ? 'Hang - Rest' : 'Recovery' }}</span>
-                <span class="step-value">{{ formatBlockDescription(block) }}</span>
-              </div>
-              <div class="step total-time">
-                <span class="step-title">Total</span>
-                <span class="step-value">{{ routineTotalFormatted(r) }}</span>
-              </div>
+          <div class="routine-steps">
+            <div class="step">
+              <span class="step-title">Countdown</span>
+              <span class="step-value">{{ formatDuration(r.countdown) }}</span>
             </div>
+            <div v-for="(block, i) in r.blocks" :key="i" class="step">
+              <span class="step-title">{{
+                block.type === 'iteration' ? 'Hang - Rest' : 'Recovery'
+              }}</span>
+              <span class="step-value">{{ formatBlockDescription(block) }}</span>
+            </div>
+            <div class="step total-time">
+              <span class="step-title">Total</span>
+              <span class="step-value">{{ routineTotalFormatted(r) }}</span>
+            </div>
+          </div>
           <template #footer>
-            <div class="footer-actions">
             <Button label="Edit" icon="pi pi-pencil" @click="onEdit(r.id)" />
             <Button
               label="Delete"
@@ -97,7 +93,6 @@ onMounted(load)
               severity="secondary"
               @click="onDelete(r.id)"
             />
-          </div>
           </template>
         </Block>
       </div>
@@ -123,18 +118,10 @@ onMounted(load)
   padding: 0.5rem;
 }
 
-.footer-actions {
-  width: 380px;
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
 .step {
   display: flex;
   gap: 0.25rem;
 }
-
 
 .step-title {
   font-weight: 800;

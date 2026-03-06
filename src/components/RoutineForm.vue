@@ -68,6 +68,24 @@ function updateBlock(index: number, block: RoutineBlock) {
   blocks.value = next
 }
 
+function moveBlockUp(index: number) {
+  if (index <= 0) return
+  const next = [...blocks.value]
+  const [block] = next.splice(index, 1)
+  if (!block) return
+  next.splice(index - 1, 0, block)
+  blocks.value = next
+}
+
+function moveBlockDown(index: number) {
+  if (index >= blocks.value.length - 1) return
+  const next = [...blocks.value]
+  const [block] = next.splice(index, 1)
+  if (!block) return
+  next.splice(index + 1, 0, block)
+  blocks.value = next
+}
+
 const totalTimeLabel = useTotalTimeLabel(countdown, blocks)
 
 const title = computed(() => (props.mode === 'create' ? 'New Routine' : 'Edit Routine'))
@@ -98,8 +116,12 @@ function onSave() {
       v-for="(block, i) in blocks"
       :key="i"
       :model-value="block"
+      :can-move-up="i > 0"
+      :can-move-down="i < blocks.length - 1"
       @update:model-value="(b) => updateBlock(i, b)"
       @remove="removeBlock(i)"
+      @move-up="moveBlockUp(i)"
+      @move-down="moveBlockDown(i)"
     />
 
     <section class="actions-container">
