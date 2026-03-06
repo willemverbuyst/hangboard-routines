@@ -20,7 +20,14 @@ const emit = defineEmits<{
   (e: 'save'): void
 }>()
 
-const OPTIONS = [10, 20, 30, 40, 50, 60] as const
+const OPTIONS: { label: string; value: number }[] = [
+  { label: '10s', value: 10 },
+  { label: '20s', value: 20 },
+  { label: '30s', value: 30 },
+  { label: '40s', value: 40 },
+  { label: '50s', value: 50 },
+  { label: '60s', value: 60 },
+]
 
 function updateRoutine(patch: Partial<Routine>) {
   emit('update:modelValue', {
@@ -109,7 +116,12 @@ function onSave() {
       <InputText v-model="name" :placeholder="namePlaceholder" />
     </Block>
     <Block title="Countdown">
-      <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
+      <SelectButton
+        v-model="countdown"
+        :options="OPTIONS"
+        optionLabel="label"
+        optionValue="value"
+      />
     </Block>
 
     <BlockRow

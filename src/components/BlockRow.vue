@@ -4,7 +4,14 @@ import type { RoutineBlock } from '@/types'
 import Button from 'primevue/button'
 import SelectButton from 'primevue/selectbutton'
 
-const OPTIONS = [10, 20, 30, 40, 50, 60] as const
+const OPTIONS: { label: string; value: number }[] = [
+  { label: '10s', value: 10 },
+  { label: '20s', value: 20 },
+  { label: '30s', value: 30 },
+  { label: '40s', value: 40 },
+  { label: '50s', value: 50 },
+  { label: '60s', value: 60 },
+]
 
 const props = defineProps<{
   modelValue: RoutineBlock
@@ -35,6 +42,8 @@ function updateRecovery(duration?: number) {
     duration: duration ?? props.modelValue.duration,
   })
 }
+
+
 </script>
 
 <template>
@@ -42,13 +51,17 @@ function updateRecovery(duration?: number) {
     <Block title="Hang - Rest">
       <SelectButton
         :model-value="modelValue.hang"
-        :options="OPTIONS.slice()"
+        :options="OPTIONS"
+        optionLabel="label"
+        optionValue="value"
         @update:model-value="(v: number) => updateIteration(v, undefined)"
       />
 
       <SelectButton
         :model-value="modelValue.rest"
-        :options="OPTIONS.slice()"
+        :options="OPTIONS"
+        optionLabel="label"
+        optionValue="value"
         @update:model-value="(v: number) => updateIteration(undefined, v)"
       />
       <template #footer>
@@ -72,7 +85,9 @@ function updateRecovery(duration?: number) {
     <Block title="Recovery">
       <SelectButton
         :model-value="modelValue.duration"
-        :options="OPTIONS.slice()"
+        :options="OPTIONS"
+        optionLabel="label"
+        optionValue="value"
         @update:model-value="(v: number) => updateRecovery(v)"
       />
       <template #footer>
