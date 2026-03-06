@@ -65,13 +65,6 @@ function formatDuration(totalSeconds: number): string {
   return `${mins}m ${secs}s`
 }
 
-function formatBlockDescription(block: RoutineBlock): string {
-  if (block.type === 'iteration') {
-    return `${block.hang}s hang, ${block.rest}s rest`
-  }
-  return `${block.duration}s`
-}
-
 function routineTotalFormatted(r: Routine): string {
   const totalSeconds = r.countdown + r.blocks.reduce((sum, b) => sum + totalSecondsForBlock(b), 0)
   return formatDuration(totalSeconds)
@@ -82,7 +75,6 @@ onMounted(load)
 
 <template>
   <PageLayout title="My Routines">
-    
     <template v-if="routines.length === 0">
       <Block title="No routines yet">
         <Button label="Create New Routine" @click="onCreateNew" />
@@ -97,11 +89,23 @@ onMounted(load)
               <span class="step-title">Countdown</span>
               <span class="step-value">{{ formatDuration(r.countdown) }}</span>
             </div>
-            <div v-for="(block, i) in r.blocks" :key="i" class="step">
-              <span class="step-title">{{
-                block.type === 'iteration' ? 'Hang - Rest' : 'Recovery'
-              }}</span>
-              <span class="step-value">{{ formatBlockDescription(block) }}</span>
+            <div v-for="(block, i) in r.blocks" :key="i">
+              <template v-if="block.type === 'iteration'">
+                <div class="step">
+                  <span class="step-title">Hang</span>
+                  <span class="step-value">{{ block.hang }}s</span>
+                </div>
+                <div class="step">
+                  <span class="step-title">Rest</span>
+                  <span class="step-value">{{ block.rest }}s</span>
+                </div>
+              </template>
+              <template v-else-if="block.type === 'recovery'">
+                <div class="step">
+                  <span class="step-title">Recovery</span>
+                  <span class="step-value">{{ block.duration }}s</span>
+                </div>
+              </template>
             </div>
             <div class="step total-time">
               <span class="step-title">Total</span>
@@ -126,7 +130,9 @@ onMounted(load)
         <h2 class="modal-title">Delete routine?</h2>
         <p class="modal-text">
           Are you sure you want to delete
-          <span v-if="routineNameToDelete" class="modal-routine-name">"{{ routineNameToDelete }}"</span>
+          <span v-if="routineNameToDelete" class="modal-routine-name"
+            >"{{ routineNameToDelete }}"</span
+          >
           <span v-else>this routine</span>
           ? This action cannot be undone.
         </p>

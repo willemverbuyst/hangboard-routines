@@ -42,12 +42,6 @@ function formatDuration(totalSeconds: number): string {
   return `${mins}m ${secs}s`
 }
 
-function formatBlockDescription(block: RoutineBlock): string {
-  if (block.type === 'iteration') {
-    return `${block.hang}s hang, ${block.rest}s rest`
-  }
-  return `${block.duration}s`
-}
 
 function routineTotalFormatted(r?: Routine): string {
   if (!r) return '--'
@@ -254,19 +248,30 @@ onUnmounted(() => {
           <span class="step-title">Countdown</span>
           <span class="step-value">{{ formatDuration(routine?.countdown ?? 0) }}</span>
         </div>
-        <div v-for="(block, i) in routine?.blocks ?? []" :key="i" class="step">
-          <span class="step-title">{{
-            block.type === 'iteration' ? 'Hang - Rest' : 'Recovery'
-          }}</span>
-          <span class="step-value">{{ formatBlockDescription(block) }}</span>
+        <div v-for="(block, i) in routine?.blocks ?? []" :key="i">
+          <div v-if="block.type === 'iteration'">
+            <div class="step">
+              <span class="step-title">Hang</span>
+              <span class="step-value">{{ block.hang }}s</span>
+            </div>
+            <div class="step">
+              <span class="step-title">Rest</span>
+              <span class="step-value">{{ block.rest }}s</span>
+            </div>
+          </div>
+          <div v-else-if="block.type === 'recovery'">
+            <div class="step">
+              <span class="step-title">Recovery</span>
+              <span class="step-value">{{ block.duration }}s</span>
+            </div>
+          </div>
         </div>
         <div class="step total-time">
           <span class="step-title">Total</span>
           <span class="step-value">{{ routineTotalFormatted(routine) }}</span>
         </div>
       </div>
-      
-      
+
       <template v-else>
         <p>Routine not found. Please go back to My Routines.</p>
       </template>
