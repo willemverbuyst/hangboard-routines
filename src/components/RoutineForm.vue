@@ -121,6 +121,7 @@ function onSave() {
         :options="OPTIONS"
         optionLabel="label"
         optionValue="value"
+        :allow-empty="false"
       />
     </Block>
 

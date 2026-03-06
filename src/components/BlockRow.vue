@@ -54,6 +54,7 @@ function updateRecovery(duration?: number) {
         :options="OPTIONS"
         optionLabel="label"
         optionValue="value"
+        :allow-empty="false"
         @update:model-value="(v: number) => updateIteration(v, undefined)"
       />
 
@@ -62,6 +63,7 @@ function updateRecovery(duration?: number) {
         :options="OPTIONS"
         optionLabel="label"
         optionValue="value"
+        :allow-empty="false"
         @update:model-value="(v: number) => updateIteration(undefined, v)"
       />
       <template #footer>
@@ -88,6 +90,7 @@ function updateRecovery(duration?: number) {
         :options="OPTIONS"
         optionLabel="label"
         optionValue="value"
+        :allow-empty="false"
         @update:model-value="(v: number) => updateRecovery(v)"
       />
       <template #footer>
