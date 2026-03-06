@@ -7,9 +7,8 @@ import Button from 'primevue/button'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import SelectButton from 'primevue/selectbutton'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-
 
 const router = useRouter()
 
@@ -38,6 +37,38 @@ function updateBlock(index: number, block: RoutineBlock) {
   const next = [...blocks.value]
   next[index] = block
   blocks.value = next
+}
+
+const totalTimeLabel = computed(() => {
+  const totalSeconds =
+    countdown.value +
+    blocks.value.reduce((total, set) => {
+      if (set.type === 'recovery') {
+        return set.duration + total
+      }
+      return set.hang + set.rest + total
+    }, 0)
+
+  const mins = Math.floor(totalSeconds / 60)
+  const secs = totalSeconds % 60
+  const minutesStr =
+    mins === 0
+      ? ''
+      : mins === 1
+        ? '1 minute'
+        : `${mins} minutes`
+  const secondsStr =
+    secs === 0 ? '' : secs === 1 ? '1 second' : `${secs} seconds`
+  const humanReadable =
+    minutesStr && secondsStr
+      ? `${minutesStr} and ${secondsStr}`
+      : minutesStr || secondsStr || '0 seconds'
+
+  return `Total: ${totalSeconds} seconds | ${humanReadable}`
+})
+
+function cancel() {
+  router.push({ name: 'My Routines' })
 }
 
 function save() {
@@ -72,13 +103,17 @@ function save() {
 
       <BlockRow v-for="(block, i) in blocks" :key="i" :model-value="block"
         @update:model-value="(b) => updateBlock(i, b)" @remove="removeBlock(i)" />
-      <section>
+      <section class="actions-container">
         <div class="actions">
           <Button severity="contrast" label="Add Iteration" @click="addIteration" />
           <Button severity="contrast" label="Add Recovery" @click="addRecovery" />
         </div>
 
-        <Button label="Save Routine" @click="save" />
+        <p class="total-time">{{ totalTimeLabel }}</p>
+        <div class="actions">
+          <Button label="Cancel" severity="secondary" @click="cancel" class="half-width-btn" />
+          <Button label="Save Routine" @click="save" class="half-width-btn" />
+        </div>
       </section>
     </div>
   </PageLayout>
@@ -91,14 +126,26 @@ function save() {
   gap: 0.75rem;
 }
 
-section {
+.actions-container {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.total-time {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--p-text-muted-color);
 }
 
 .actions {
   display: flex;
   gap: 0.5rem;
+}
+
+.actions button {
+  flex: 1 1 0;
 }
 </style>
