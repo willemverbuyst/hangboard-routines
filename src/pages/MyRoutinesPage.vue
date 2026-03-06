@@ -48,6 +48,10 @@ function onCreateNew() {
   router.push({ name: 'New Routine' })
 }
 
+function onSelect(id: string) {
+  router.push({ name: 'Routine', params: { id } })
+}
+
 function totalSecondsForBlock(block: RoutineBlock): number {
   if (block.type === 'recovery') return block.duration
   return block.hang + block.rest
@@ -105,6 +109,7 @@ onMounted(load)
             </div>
           </div>
           <template #footer>
+            <Button label="Select" icon="pi pi-check" @click="onSelect(r.id)" />
             <Button label="Edit" icon="pi pi-pencil" @click="onEdit(r.id)" />
             <Button
               label="Delete"
