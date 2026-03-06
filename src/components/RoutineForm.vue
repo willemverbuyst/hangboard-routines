@@ -153,6 +153,7 @@ function onSave() {
 
 <style scoped>
 .actions-container {
+  width: 380px;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
