@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Block from '@/components/Block.vue'
+import Block from '@/components/BlockComponent.vue'
 import BlockRow from '@/components/BlockRow.vue'
 import PageLayout from '@/components/PageLayout.vue'
 import { useTotalTimeLabel } from '@/composables/useTotalTimeLabel'
@@ -8,8 +8,8 @@ import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import SelectButton from 'primevue/selectbutton'
-import { ref, onMounted, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()

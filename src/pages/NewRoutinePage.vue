@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Block from '@/components/Block.vue'
+import Block from '@/components/BlockComponent.vue'
 import BlockRow from '@/components/BlockRow.vue'
 import PageLayout from '@/components/PageLayout.vue'
 import { useTotalTimeLabel } from '@/composables/useTotalTimeLabel'

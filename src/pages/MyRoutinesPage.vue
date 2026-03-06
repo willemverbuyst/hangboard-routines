@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import Block from '@/components/Block.vue'
+import Block from '@/components/BlockComponent.vue'
 import PageLayout from '@/components/PageLayout.vue'
 import { deleteRoutineById, getRoutines } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
-import Card from 'primevue/card'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -63,39 +62,34 @@ onMounted(load)
       <Button label="New Routine" @click="onCreateNew" />
     </div>
     <template v-if="routines.length === 0">
-      <Block>
-        <p>No routines yet.</p>
+      <Block title="No routines yet">
         <Button label="Create New Routine" @click="onCreateNew" />
       </Block>
     </template>
     <template v-else>
       <div class="routine-list">
-        <Card v-for="r in routines" :key="r.id" class="routine-card">
+        <Block v-for="r in routines" :key="r.id" class="routine-card">
           <template #title>{{ r.name }}</template>
-          <template #content>
             <div class="routine-steps">
-              <Card class="step-card">
-                <template #title>Countdown</template>
-                <template #content>
-                  <span class="step-value">{{ formatDuration(r.countdown) }}</span>
-                </template>
-              </Card>
-              <Card
+              <div class="step">
+                <span class="step-title">Countdown</span>
+                <span class="step-value">{{ formatDuration(r.countdown) }}</span>
+              </div>
+              <div
                 v-for="(block, i) in r.blocks"
                 :key="i"
-                class="step-card"
+                class="step"
               >
-                <template #title>
-                  {{ block.type === 'iteration' ? 'Hang - Rest' : 'Recovery' }}
-                </template>
-                <template #content>
-                  <span class="step-value">{{ formatBlockDescription(block) }}</span>
-                </template>
-              </Card>
-              <p class="total-time">Total: {{ routineTotalFormatted(r) }}</p>
+                <span class="step-title">{{ block.type === 'iteration' ? 'Hang - Rest' : 'Recovery' }}</span>
+                <span class="step-value">{{ formatBlockDescription(block) }}</span>
+              </div>
+              <div class="step total-time">
+                <span class="step-title">Total</span>
+                <span class="step-value">{{ routineTotalFormatted(r) }}</span>
+              </div>
             </div>
-          </template>
           <template #footer>
+            <div class="footer-actions">
             <Button label="Edit" icon="pi pi-pencil" @click="onEdit(r.id)" />
             <Button
               label="Delete"
@@ -103,8 +97,9 @@ onMounted(load)
               severity="secondary"
               @click="onDelete(r.id)"
             />
+          </div>
           </template>
-        </Card>
+        </Block>
       </div>
     </template>
   </PageLayout>
@@ -116,49 +111,36 @@ onMounted(load)
 }
 
 .routine-list {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .routine-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 960px) {
-  .routine-list {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.routine-card :deep(.p-card-footer) {
-  width: 380px;
   display: flex;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .routine-steps {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  padding: 0.5rem;
 }
 
-.routine-card .step-card {
-  margin: 0;
+.footer-actions {
+  width: 380px;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
-.routine-card .step-card :deep(.p-card-title) {
-  font-size: 0.95rem;
+.step {
+  display: flex;
+  gap: 0.25rem;
 }
 
-.routine-card .step-card :deep(.p-card-content) {
-  padding-top: 0;
+
+.step-title {
+  font-weight: 800;
 }
 
 .step-value {
-  font-size: 0.9375rem;
   font-weight: 500;
 }
 
