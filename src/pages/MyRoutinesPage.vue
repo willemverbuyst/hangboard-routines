@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Block from '@/components/Block.vue'
 import PageLayout from '@/components/PageLayout.vue'
 import { deleteRoutineById, getRoutines } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
@@ -62,12 +63,10 @@ onMounted(load)
       <Button label="New Routine" @click="onCreateNew" />
     </div>
     <template v-if="routines.length === 0">
-      <Card>
-        <template #content>
-          <p>No routines yet.</p>
-          <Button label="Create New Routine" @click="onCreateNew" />
-        </template>
-      </Card>
+      <Block>
+        <p>No routines yet.</p>
+        <Button label="Create New Routine" @click="onCreateNew" />
+      </Block>
     </template>
     <template v-else>
       <div class="routine-list">
@@ -135,6 +134,7 @@ onMounted(load)
 }
 
 .routine-card :deep(.p-card-footer) {
+  width: 380px;
   display: flex;
   gap: 0.5rem;
 }

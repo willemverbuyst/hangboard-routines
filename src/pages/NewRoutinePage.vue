@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import Block from '@/components/Block.vue'
 import BlockRow from '@/components/BlockRow.vue'
 import PageLayout from '@/components/PageLayout.vue'
 import { useTotalTimeLabel } from '@/composables/useTotalTimeLabel'
 import { saveRoutine } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
-import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import SelectButton from 'primevue/selectbutton'
 import { ref } from 'vue'
@@ -62,18 +62,12 @@ function save() {
 
 <template>
   <PageLayout title="New Routine">
-    <Card>
-      <template #title>Name</template>
-      <template #content>
-        <InputText v-model="name" placeholder="Name of new routine" />
-      </template>
-    </Card>
-    <Card>
-      <template #title>Countdown</template>
-      <template #content>
-        <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
-      </template>
-    </Card>
+    <Block title="Name">
+      <InputText v-model="name" placeholder="Name of new routine" />
+    </Block>
+    <Block title="Countdown">
+      <SelectButton v-model="countdown" :options="OPTIONS.slice()" />
+    </Block>
 
     <BlockRow v-for="(block, i) in blocks" :key="i" :model-value="block" @update:model-value="(b) => updateBlock(i, b)"
       @remove="removeBlock(i)" />

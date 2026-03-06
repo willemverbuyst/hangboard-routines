@@ -18,6 +18,7 @@ body {
 </style>
 <style scoped>
 .app {
+  background-color: #333;
   min-height: 100vh;
   width: 100vw;
   display: flex;

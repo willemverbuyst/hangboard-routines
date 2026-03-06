@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import Block from '@/components/Block.vue'
 import type { RoutineBlock } from '@/types';
 import Button from 'primevue/button';
-import Card from 'primevue/card';
 import SelectButton from 'primevue/selectbutton';
 
 const OPTIONS = [10, 20, 30, 40, 50, 60] as const
@@ -35,46 +35,21 @@ function updateRecovery(duration?: number) {
 
 <template>
   <template v-if="modelValue.type === 'iteration'">
-    <Card>
-      <template #title>
-        Hang - Rest
-      </template>
-      <template #content>
-        <div class="block-content">
+    <Block title="Hang - Rest">
+      <SelectButton :model-value="modelValue.hang" :options="OPTIONS.slice()"
+        @update:model-value="(v: number) => updateIteration(v, undefined)" />
 
-          <SelectButton :model-value="modelValue.hang" :options="OPTIONS.slice()"
-            @update:model-value="(v: number) => updateIteration(v, undefined)" />
-
-          <SelectButton :model-value="modelValue.rest" :options="OPTIONS.slice()"
-            @update:model-value="(v: number) => updateIteration(undefined, v)" />
-          <Button icon="pi pi-trash" severity="danger" @click="emit('remove')" />
-
-        </div>
-      </template>
-    </Card>
+      <SelectButton :model-value="modelValue.rest" :options="OPTIONS.slice()"
+        @update:model-value="(v: number) => updateIteration(undefined, v)" />
+      <Button icon="pi pi-trash" severity="danger" @click="emit('remove')" />
+    </Block>
   </template>
   <template v-else>
-    <Card>
-      <template #title>
-        Recovery
-      </template>
-      <template #content>
-        <div class="block-content">
-          <SelectButton :model-value="modelValue.duration" :options="OPTIONS.slice()"
-            @update:model-value="(v: number) => updateRecovery(v)" />
-          <Button severity="danger" icon="pi pi-trash" @click="emit('remove')" />
-        </div>
-      </template>
-    </Card>
+    <Block title="Recovery">
+      <SelectButton :model-value="modelValue.duration" :options="OPTIONS.slice()"
+        @update:model-value="(v: number) => updateRecovery(v)" />
+      <Button severity="danger" icon="pi pi-trash" @click="emit('remove')" />
+    </Block>
   </template>
-
-
 </template>
 
-<style scoped>
-.block-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-</style>
