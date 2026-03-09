@@ -76,7 +76,7 @@ function confirmAddToMyRoutines(name: string) {
 }
 
 function onSelect(routine: Routine) {
-  router.push({ name: 'Routine', params: { id: routine.id } })
+  router.push({ name: 'Routine by Id', params: { id: routine.id } })
 }
 
 watch(showDeleteConfirm, (open) => {
