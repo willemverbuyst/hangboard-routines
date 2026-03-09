@@ -2,14 +2,29 @@ import type { Routine } from '@/types'
 
 const STORAGE_KEY = 'my-hangboard-routines'
 
+import { getExampleRoutines } from '@/data/exampleRoutines'
+
 export function getRoutines(): Routine[] {
+  const exampleRoutines = getExampleRoutines()
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw == null) return []
-    const parsed = JSON.parse(raw) as unknown
-    return Array.isArray(parsed) ? parsed : []
+    if (!raw) {
+      // Only examples if nothing in localStorage
+      return [...exampleRoutines]
+    }
+    const parsed = JSON.parse(raw)
+    const localRoutines = Array.isArray(parsed) ? parsed : []
+    // Merge examples and local routines, avoid duplicate ids
+    const all = [...exampleRoutines]
+    for (const r of localRoutines) {
+      if (!all.some((ex) => ex.id === r.id)) {
+        all.push(r)
+      }
+    }
+    return all
   } catch {
-    return []
+    // On error, return just the examples
+    return [...exampleRoutines]
   }
 }
 
