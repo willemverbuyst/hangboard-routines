@@ -3,11 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', redirect: '/my-routines' },
+    { path: '/', redirect: '/routines' },
     {
-      path: '/my-routines',
-      name: 'My Routines',
-      component: () => import('@/pages/MyRoutinesPage.vue'),
+      path: '/routines',
+      name: 'Routines',
+      component: () => import('@/pages/RoutinesPage.vue'),
     },
     {
       path: '/new-routine',
@@ -23,6 +23,11 @@ export const router = createRouter({
       path: '/routine/:id',
       name: 'Routine',
       component: () => import('@/pages/RoutinePage.vue'),
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/pages/NotFoundPage.vue'),
     },
   ],
 })

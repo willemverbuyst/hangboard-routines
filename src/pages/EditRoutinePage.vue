@@ -20,14 +20,14 @@ function load() {
   const id = routineId.value
   const existing = id ? getRoutineById(id) : undefined
   if (!existing) {
-    router.replace({ name: 'My Routines' })
+    router.replace({ name: 'Routines' })
     return
   }
   routine.value = existing
 }
 
 function cancel() {
-  router.push({ name: 'My Routines' })
+  router.push({ name: 'Routines' })
 }
 
 function save() {
@@ -38,7 +38,7 @@ function save() {
     name: trimmed,
   }
   saveRoutine(routine.value)
-  router.push({ name: 'My Routines' })
+  router.push({ name: 'Routines' })
 }
 
 onMounted(load)

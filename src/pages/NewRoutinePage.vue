@@ -18,7 +18,7 @@ const routine = ref<Routine>({
 })
 
 function cancel() {
-  router.push({ name: 'My Routines' })
+  router.push({ name: 'Routines' })
 }
 
 function save() {
@@ -29,7 +29,7 @@ function save() {
     name: trimmed,
   }
   saveRoutine(routine.value)
-  router.push({ name: 'My Routines' })
+  router.push({ name: 'Routines' })
 }
 </script>
 

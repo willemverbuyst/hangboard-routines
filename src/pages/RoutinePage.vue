@@ -345,7 +345,7 @@ onUnmounted(() => {
         <Button icon="pi pi-stop" label="Stop" severity="secondary" @click="stopRoutine" :disabled="!canStop" />
       </template>
     </Block>
-    <Button icon="pi pi-list" label="My Routines" @click="$router.push({ name: 'My Routines' })" />
+    <Button icon="pi pi-list" label="My Routines" @click="$router.push({ name: 'Routines' })" />
   </PageLayout>
 </template>
 
