@@ -13,7 +13,17 @@ export function getRoutines(): Routine[] {
       return [...exampleRoutines]
     }
     const parsed = JSON.parse(raw)
-    const localRoutines = Array.isArray(parsed) ? parsed : []
+    if (!Array.isArray(parsed)) {
+      console.warn(
+        '[storage] Corrupted routines: expected an array, got',
+        typeof parsed,
+        '- clearing localStorage key',
+        STORAGE_KEY
+      )
+      localStorage.removeItem(STORAGE_KEY)
+      return [...exampleRoutines]
+    }
+    const localRoutines = parsed
     // Merge examples and local routines, avoid duplicate ids
     const all = [...exampleRoutines]
     for (const r of localRoutines) {
@@ -22,8 +32,14 @@ export function getRoutines(): Routine[] {
       }
     }
     return all
-  } catch {
-    // On error, return just the examples
+  } catch (err) {
+    console.warn(
+      '[storage] Failed to parse routines from localStorage:',
+      err,
+      '- clearing key',
+      STORAGE_KEY
+    )
+    localStorage.removeItem(STORAGE_KEY)
     return [...exampleRoutines]
   }
 }
