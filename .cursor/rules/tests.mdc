@@ -1,0 +1,7 @@
+---
+alwaysApply: true
+---
+
+When writing tests: 
+- avoid mocks as much as possible
+- avoid redundant testing

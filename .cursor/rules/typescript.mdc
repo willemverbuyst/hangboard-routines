@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+---
+
+- Allways fix typescript errors.
+- Never use the "any" type unless really needed. If so add comments why this is needed.

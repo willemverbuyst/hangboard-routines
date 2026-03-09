@@ -1,6 +1,6 @@
 import type { Routine } from '@/types'
 
-const STORAGE_KEY = 'my-hangboard-routines'
+export const STORAGE_KEY = 'my-hangboard-routines'
 
 import { getExampleRoutines } from '@/data/exampleRoutines'
 
@@ -73,6 +73,5 @@ export function saveRoutine(routine: Routine): void {
 }
 
 export function deleteRoutineById(id: string): void {
-  console.log('deleteRoutineById', id)
   setRoutines(getMyRoutines().filter((r) => r.id !== id))
 }
