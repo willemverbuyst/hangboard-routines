@@ -20,11 +20,11 @@ Use **Vue 3 Composition API with `<script setup>`**.
 
 Use the following stack:
 
-* Vue 3
-* TypeScript
-* PrimeVue
-* Vue Router 4
-* Vite
+- Vue 3
+- TypeScript
+- PrimeVue
+- Vue Router 4
+- Vite
 
 Project structure should follow common Vue conventions.
 
@@ -32,12 +32,12 @@ Example structure:
 
 src
 
-* components
-* pages
-* router
-* types
-* services
-* composables
+- components
+- pages
+- router
+- types
+- services
+- composables
 
 Use a small **localStorage service** to isolate storage logic.
 
@@ -71,12 +71,12 @@ export type Routine = {
 
 export type RoutineBlock =
   | {
-      type: "iteration"
+      type: 'iteration'
       hang: number
       rest: number
     }
   | {
-      type: "recovery"
+      type: 'recovery'
       duration: number
     }
 ```
@@ -104,13 +104,12 @@ Page name: Edit Routine
 
 Responsibilities:
 
-* Load routines from local storage
-* Display routines in a list
-* Each routine shows:
-
-  * name
-  * edit button
-  * delete button
+- Load routines from local storage
+- Display routines in a list
+- Each routine shows:
+  - name
+  - edit button
+  - delete button
 
 Delete should remove the routine from local storage.
 
@@ -128,8 +127,8 @@ This navigates to:
 
 Use PrimeVue components such as:
 
-* Card
-* Button
+- Card
+- Button
 
 ---
 
@@ -152,17 +151,17 @@ Two block types exist.
 
 Iteration:
 
-* hang (radio: 10,20,30,40,50,60)
-* rest (radio: 10,20,30,40,50,60)
+- hang (radio: 10,20,30,40,50,60)
+- rest (radio: 10,20,30,40,50,60)
 
 Recovery:
 
-* duration (radio: 10,20,30,40,50,60)
+- duration (radio: 10,20,30,40,50,60)
 
 The user can add blocks:
 
-* Add Iteration
-* Add Recovery
+- Add Iteration
+- Add Recovery
 
 Use PrimeVue SelectButton components.
 
@@ -191,8 +190,8 @@ duration: 60
 
 When saving:
 
-* generate a unique id
-* add routine to local storage
+- generate a unique id
+- add routine to local storage
 
 After saving:
 
@@ -206,9 +205,9 @@ Same UI as **New Routine**.
 
 Differences:
 
-* Load routine by id from local storage
-* Prefill fields
-* Saving updates the existing routine
+- Load routine by id from local storage
+- Prefill fields
+- Saving updates the existing routine
 
 ---
 
@@ -230,12 +229,12 @@ Focus on functionality.
 
 ## Code Guidelines
 
-* Strict TypeScript
-* No `any`
-* Composition API
-* Small reusable components where appropriate
-* Avoid unnecessary abstractions
-* Keep components readable
+- Strict TypeScript
+- No `any`
+- Composition API
+- Small reusable components where appropriate
+- Avoid unnecessary abstractions
+- Keep components readable
 
 ---
 

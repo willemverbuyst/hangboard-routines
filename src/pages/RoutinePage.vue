@@ -48,7 +48,6 @@ function formatDuration(totalSeconds: number): string {
   return `${mins}m ${secs}s`
 }
 
-
 function routineTotalFormatted(r?: Routine): string {
   if (!r) return '--'
   const totalSeconds = r.countdown + r.blocks.reduce((sum, b) => sum + totalSecondsForBlock(b), 0)
@@ -314,17 +313,28 @@ onUnmounted(() => {
           v-for="(step, i) in displaySteps"
           :key="i"
           class="step"
-          style="position: relative; min-height: 1.5em;"
+          style="position: relative; min-height: 1.5em"
         >
           <span
             v-if="step.stageIndex !== null"
-            style="position: absolute; left: .2em; top: .4em; width: 1em; display: flex; justify-content: center; align-items: flex-start; height: 100%;"
+            style="
+              position: absolute;
+              left: 0.2em;
+              top: 0.4em;
+              width: 1em;
+              display: flex;
+              justify-content: center;
+              align-items: flex-start;
+              height: 100%;
+            "
             aria-hidden="true"
           >
             <span
-              v-if="step.stageIndex === currentStageIndex && status !== 'idle' && status !== 'finished'"
+              v-if="
+                step.stageIndex === currentStageIndex && status !== 'idle' && status !== 'finished'
+              "
               class="step-indicator"
-              style="position: relative; top: 0.1em;"
+              style="position: relative; top: 0.1em"
             ></span>
           </span>
           <span class="step-title" :style="{ marginLeft: '1.3em' }">{{ step.label }}</span>
@@ -342,7 +352,13 @@ onUnmounted(() => {
       <template v-if="hasRoutine && totalStages" #footer>
         <Button icon="pi pi-play" label="Start" @click="startRoutine" :disabled="!canStart" />
         <Button icon="pi pi-pause" label="Pause" @click="pauseRoutine" :disabled="!canPause" />
-        <Button icon="pi pi-stop" label="Stop" severity="secondary" @click="stopRoutine" :disabled="!canStop" />
+        <Button
+          icon="pi pi-stop"
+          label="Stop"
+          severity="secondary"
+          @click="stopRoutine"
+          :disabled="!canStop"
+        />
       </template>
     </Block>
     <Button icon="pi pi-list" label="My Routines" @click="$router.push({ name: 'Routines' })" />

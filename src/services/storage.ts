@@ -14,7 +14,7 @@ function getMyRoutinesFromStorage(): Routine[] {
         '[storage] Corrupted routines: expected an array, got',
         typeof parsed,
         '- clearing localStorage key',
-        STORAGE_KEY
+        STORAGE_KEY,
       )
       localStorage.removeItem(STORAGE_KEY)
       return []
@@ -25,7 +25,7 @@ function getMyRoutinesFromStorage(): Routine[] {
       '[storage] Failed to parse routines from localStorage:',
       err,
       '- clearing key',
-      STORAGE_KEY
+      STORAGE_KEY,
     )
     localStorage.removeItem(STORAGE_KEY)
     return []

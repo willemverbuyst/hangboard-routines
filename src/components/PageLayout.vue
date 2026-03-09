@@ -26,13 +26,14 @@ defineProps<{
 }
 
 h1 {
-  font-size:2.3rem;
+  font-size: 2.3rem;
   font-weight: 800;
   color: var(--p-primary-color);
   margin-bottom: 1rem;
 }
 
-h1, h2 {
+h1,
+h2 {
   text-align: center;
   margin-bottom: 1rem;
 }

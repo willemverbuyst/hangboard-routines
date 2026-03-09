@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Card from 'primevue/card';
-import { computed, useSlots } from 'vue';
+import Card from 'primevue/card'
+import { computed, useSlots } from 'vue'
 
 const props = defineProps<{
   title?: string

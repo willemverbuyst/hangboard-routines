@@ -42,8 +42,6 @@ function updateRecovery(duration?: number) {
     duration: duration ?? props.modelValue.duration,
   })
 }
-
-
 </script>
 
 <template>

@@ -22,9 +22,7 @@ describe('useTotalTimeLabel', () => {
 
   it('includes iteration block time (hang + rest)', () => {
     const countdown = ref(10)
-    const blocks = ref([
-      { type: 'iteration' as const, hang: 10, rest: 50 },
-    ])
+    const blocks = ref([{ type: 'iteration' as const, hang: 10, rest: 50 }])
     const totalTimeLabel = useTotalTimeLabel(countdown, blocks)
 
     expect(totalTimeLabel.value).toContain('Total: 70 seconds')
@@ -54,9 +52,7 @@ describe('useTotalTimeLabel', () => {
 
   it('pluralization: 1 minute and 1 second (no trailing s)', () => {
     const countdown = ref(0)
-    const blocks = ref([
-      { type: 'iteration' as const, hang: 30, rest: 31 },
-    ])
+    const blocks = ref([{ type: 'iteration' as const, hang: 30, rest: 31 }])
     const totalTimeLabel = useTotalTimeLabel(countdown, blocks)
 
     expect(totalTimeLabel.value).toContain('1 minute and 1 second')

@@ -54,4 +54,3 @@ export const exampleRoutines: Routine[] = [
 export function getExampleRoutines(): Routine[] {
   return exampleRoutines
 }
-

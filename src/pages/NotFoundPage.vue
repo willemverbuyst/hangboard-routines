@@ -17,11 +17,7 @@ function goToRoutines() {
       <div class="not-found">
         <h1 class="title">404</h1>
         <p class="message">The page you’re looking for doesn’t exist.</p>
-        <Button
-          label="Back to My Routines"
-          icon="pi pi-arrow-left"
-          @click="goToRoutines"
-        />
+        <Button label="Back to My Routines" icon="pi pi-arrow-left" @click="goToRoutines" />
       </div>
     </Block>
   </PageLayout>
@@ -47,4 +43,3 @@ function goToRoutines() {
   opacity: 0.85;
 }
 </style>
-
