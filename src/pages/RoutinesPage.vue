@@ -325,6 +325,19 @@ onMounted(load)
   margin-bottom: 1.25rem;
 }
 
+/* Light input styling to match white modal (overrides dark theme) */
+.modal .modal-input,
+.modal .modal-input :deep(.p-inputtext) {
+  background: #f5f5f5;
+  color: #111;
+  border: 1px solid #ddd;
+}
+
+.modal .modal-input::placeholder,
+.modal .modal-input :deep(.p-inputtext)::placeholder {
+  color: #666;
+}
+
 .modal-routine-name {
   font-weight: 700;
 }
