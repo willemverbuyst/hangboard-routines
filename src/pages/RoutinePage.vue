@@ -2,7 +2,8 @@
 import Block from '@/components/BlockComponent.vue'
 import PageLayout from '@/components/PageLayout.vue'
 import { getRoutineById } from '@/services/storage'
-import type { Routine, RoutineBlock } from '@/types'
+import type { Routine } from '@/types'
+import { formatDuration, routineTotalFormatted as formatRoutineTotal } from '@/utils/duration'
 import Button from 'primevue/button'
 import { computed, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -35,23 +36,8 @@ const routine = computed<Routine | undefined>(() => {
 
 const pageTitle = computed(() => (routine.value ? routine.value.name : 'Routine not found'))
 
-function totalSecondsForBlock(block: RoutineBlock): number {
-  if (block.type === 'recovery') return block.duration
-  return block.hang + block.rest
-}
-
-function formatDuration(totalSeconds: number): string {
-  const mins = Math.floor(totalSeconds / 60)
-  const secs = totalSeconds % 60
-  if (mins === 0) return `${secs}s`
-  if (secs === 0) return mins === 1 ? '1 min' : `${mins} min`
-  return `${mins}m ${secs}s`
-}
-
 function routineTotalFormatted(r?: Routine): string {
-  if (!r) return '--'
-  const totalSeconds = r.countdown + r.blocks.reduce((sum, b) => sum + totalSecondsForBlock(b), 0)
-  return formatDuration(totalSeconds)
+  return r ? formatRoutineTotal(r) : '--'
 }
 
 const stages = computed<Stage[]>(() => {
