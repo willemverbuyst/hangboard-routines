@@ -2,7 +2,7 @@
 import Block from '@/components/BlockComponent.vue'
 import PageLayout from '@/components/PageLayout.vue'
 import { getExampleRoutines } from '@/data/exampleRoutines'
-import { deleteRoutineById, getRoutines, saveRoutine } from '@/services/storage'
+import { deleteRoutineById, getMyRoutines, saveRoutine } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
 import SelectButton from 'primevue/selectbutton'
@@ -27,7 +27,7 @@ const isExamplesSource = computed(() => routineSource.value === 'examples')
 
 function load() {
   if (routineSource.value === 'my') {
-    routines.value = getRoutines()
+    routines.value = getMyRoutines()
   } else {
     routines.value = getExampleRoutines()
   }
@@ -64,24 +64,21 @@ function onCreateNew() {
   router.push({ name: 'New Routine' })
 }
 
-function createRoutineId(): string {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-    return crypto.randomUUID()
+function addToMyRoutines(id: string) {
+  const routine = routines.value.find((r) => r.id === id)
+  if (!routine) return
+  const copy: Routine = {
+    ...routine,
+    id: crypto.randomUUID(),
+    blocks: routine.blocks.map((b) => ({ ...b })),
   }
-  return `${Date.now()}-${Math.random().toString(16).slice(2)}`
+  saveRoutine(copy)
+  routineSource.value = 'my'
+  load()
 }
 
 function onSelect(routine: Routine) {
-  if (routineSource.value === 'examples') {
-    const cloned: Routine = {
-      ...routine,
-      id: createRoutineId(),
-    }
-    saveRoutine(cloned)
-    router.push({ name: 'Routine', params: { id: cloned.id } })
-  } else {
-    router.push({ name: 'Routine', params: { id: routine.id } })
-  }
+  router.push({ name: 'Routine', params: { id: routine.id } })
 }
 
 function totalSecondsForBlock(block: RoutineBlock): number {
@@ -158,7 +155,7 @@ onMounted(load)
           </div>
           <template #footer>
             <Button
-              :label="isExamplesSource ? 'Use Template' : 'Select'"
+              :label="'Select'"
               severity="secondary"
               icon="pi pi-check"
               @click="onSelect(r)"
@@ -176,6 +173,13 @@ onMounted(load)
               icon="pi pi-trash"
               severity="secondary"
               @click="askDelete(r.id)"
+            />
+            <Button
+              v-if="isExamplesSource"
+              label="Add to My Routines"
+              icon="pi pi-plus"
+              severity="secondary"
+              @click="addToMyRoutines(r.id)"
             />
           </template>
         </Block>
@@ -288,5 +292,3 @@ onMounted(load)
   gap: 0.75rem;
 }
 </style>
-
-

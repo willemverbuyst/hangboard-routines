@@ -4,14 +4,10 @@ const STORAGE_KEY = 'my-hangboard-routines'
 
 import { getExampleRoutines } from '@/data/exampleRoutines'
 
-export function getRoutines(): Routine[] {
-  const exampleRoutines = getExampleRoutines()
+function getMyRoutinesFromStorage(): Routine[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) {
-      // Only examples if nothing in localStorage
-      return [...exampleRoutines]
-    }
+    if (!raw) return []
     const parsed = JSON.parse(raw)
     if (!Array.isArray(parsed)) {
       console.warn(
@@ -21,17 +17,9 @@ export function getRoutines(): Routine[] {
         STORAGE_KEY
       )
       localStorage.removeItem(STORAGE_KEY)
-      return [...exampleRoutines]
+      return []
     }
-    const localRoutines = parsed
-    // Merge examples and local routines, avoid duplicate ids
-    const all = [...exampleRoutines]
-    for (const r of localRoutines) {
-      if (!all.some((ex) => ex.id === r.id)) {
-        all.push(r)
-      }
-    }
-    return all
+    return parsed
   } catch (err) {
     console.warn(
       '[storage] Failed to parse routines from localStorage:',
@@ -40,8 +28,25 @@ export function getRoutines(): Routine[] {
       STORAGE_KEY
     )
     localStorage.removeItem(STORAGE_KEY)
-    return [...exampleRoutines]
+    return []
   }
+}
+
+export function getMyRoutines(): Routine[] {
+  return getMyRoutinesFromStorage()
+}
+
+export function getAllRoutines(): Routine[] {
+  const exampleRoutines = getExampleRoutines()
+  const localRoutines = getMyRoutinesFromStorage()
+  // Merge examples and local routines, avoid duplicate ids
+  const all = [...exampleRoutines]
+  for (const r of localRoutines) {
+    if (!all.some((ex) => ex.id === r.id)) {
+      all.push(r)
+    }
+  }
+  return all
 }
 
 export function setRoutines(routines: Routine[]): void {
@@ -53,11 +58,11 @@ export function setRoutines(routines: Routine[]): void {
 }
 
 export function getRoutineById(id: string): Routine | undefined {
-  return getRoutines().find((r) => r.id === id)
+  return getAllRoutines().find((r) => r.id === id)
 }
 
 export function saveRoutine(routine: Routine): void {
-  const routines = getRoutines()
+  const routines = getMyRoutines()
   const index = routines.findIndex((r) => r.id === routine.id)
   if (index >= 0) {
     routines[index] = routine
@@ -68,5 +73,6 @@ export function saveRoutine(routine: Routine): void {
 }
 
 export function deleteRoutineById(id: string): void {
-  setRoutines(getRoutines().filter((r) => r.id !== id))
+  console.log('deleteRoutineById', id)
+  setRoutines(getMyRoutines().filter((r) => r.id !== id))
 }
