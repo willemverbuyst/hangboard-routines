@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "test": "vitest run",
+    "test": "vitest run --silent",
     "test:watch": "vitest",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
