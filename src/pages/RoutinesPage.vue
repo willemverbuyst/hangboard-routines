@@ -5,6 +5,7 @@ import { getExampleRoutines } from '@/data/exampleRoutines'
 import { deleteRoutineById, getMyRoutines, saveRoutine } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
 import SelectButton from 'primevue/selectbutton'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -17,6 +18,10 @@ const routines = ref<Routine[]>([])
 const showDeleteConfirm = ref(false)
 const routineIdToDelete = ref<string | null>(null)
 const routineNameToDelete = ref('')
+
+const showAddToMyRoutinesModal = ref(false)
+const routineToAdd = ref<Routine | null>(null)
+const addRoutineName = ref('')
 
 const sourceOptions = [
   { label: 'My routines', value: 'my' as const },
@@ -64,17 +69,34 @@ function onCreateNew() {
   router.push({ name: 'New Routine' })
 }
 
-function addToMyRoutines(id: string) {
-  const routine = routines.value.find((r) => r.id === id)
+function askAddToMyRoutines(routine: Routine) {
+  routineToAdd.value = routine
+  addRoutineName.value = routine.name
+  showAddToMyRoutinesModal.value = true
+}
+
+function cancelAddToMyRoutines() {
+  showAddToMyRoutinesModal.value = false
+  routineToAdd.value = null
+  addRoutineName.value = ''
+}
+
+function confirmAddToMyRoutines() {
+  const routine = routineToAdd.value
   if (!routine) return
+  const name = addRoutineName.value.trim() || routine.name
   const copy: Routine = {
     ...routine,
     id: crypto.randomUUID(),
+    name,
     blocks: routine.blocks.map((b) => ({ ...b })),
   }
   saveRoutine(copy)
   routineSource.value = 'my'
   load()
+  showAddToMyRoutinesModal.value = false
+  routineToAdd.value = null
+  addRoutineName.value = ''
 }
 
 function onSelect(routine: Routine) {
@@ -179,7 +201,7 @@ onMounted(load)
               label="Add to My Routines"
               icon="pi pi-plus"
               severity="secondary"
-              @click="addToMyRoutines(r.id)"
+              @click="askAddToMyRoutines(r)"
             />
           </template>
         </Block>
@@ -199,6 +221,22 @@ onMounted(load)
         <div class="modal-actions">
           <Button label="Cancel" severity="secondary" @click="cancelDelete" />
           <Button label="Delete" icon="pi pi-trash" severity="danger" @click="confirmDelete" />
+        </div>
+      </div>
+    </div>
+    <div v-if="showAddToMyRoutinesModal" class="modal-backdrop">
+      <div class="modal">
+        <h2 class="modal-title">Add to My Routines</h2>
+        <p class="modal-text">Routine name:</p>
+        <InputText
+          v-model="addRoutineName"
+          class="modal-input"
+          placeholder="Routine name"
+          aria-label="Routine name"
+        />
+        <div class="modal-actions">
+          <Button label="Cancel" severity="secondary" @click="cancelAddToMyRoutines" />
+          <Button label="Add" icon="pi pi-plus" @click="confirmAddToMyRoutines" />
         </div>
       </div>
     </div>
@@ -278,8 +316,13 @@ onMounted(load)
 }
 
 .modal-text {
-  margin: 0 0 1.25rem;
+  margin: 0 0 0.5rem;
   font-size: 0.95rem;
+}
+
+.modal-input {
+  width: 100%;
+  margin-bottom: 1.25rem;
 }
 
 .modal-routine-name {
