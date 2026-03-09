@@ -1,20 +1,36 @@
 <script setup lang="ts">
 import Block from '@/components/BlockComponent.vue'
 import PageLayout from '@/components/PageLayout.vue'
-import { deleteRoutineById, getRoutines } from '@/services/storage'
+import { getExampleRoutines } from '@/data/exampleRoutines'
+import { deleteRoutineById, getRoutines, saveRoutine } from '@/services/storage'
 import type { Routine, RoutineBlock } from '@/types'
 import Button from 'primevue/button'
-import { onMounted, ref } from 'vue'
+import SelectButton from 'primevue/selectbutton'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+type RoutineSource = 'my' | 'examples'
+
 const router = useRouter()
+const routineSource = ref<RoutineSource>('my')
 const routines = ref<Routine[]>([])
 const showDeleteConfirm = ref(false)
 const routineIdToDelete = ref<string | null>(null)
 const routineNameToDelete = ref('')
 
+const sourceOptions = [
+  { label: 'My routines', value: 'my' as const },
+  { label: 'Examples', value: 'examples' as const },
+]
+
+const isExamplesSource = computed(() => routineSource.value === 'examples')
+
 function load() {
-  routines.value = getRoutines()
+  if (routineSource.value === 'my') {
+    routines.value = getRoutines()
+  } else {
+    routines.value = getExampleRoutines()
+  }
 }
 
 function onEdit(id: string) {
@@ -48,8 +64,24 @@ function onCreateNew() {
   router.push({ name: 'New Routine' })
 }
 
-function onSelect(id: string) {
-  router.push({ name: 'Routine', params: { id } })
+function createRoutineId(): string {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return crypto.randomUUID()
+  }
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
+function onSelect(routine: Routine) {
+  if (routineSource.value === 'examples') {
+    const cloned: Routine = {
+      ...routine,
+      id: createRoutineId(),
+    }
+    saveRoutine(cloned)
+    router.push({ name: 'Routine', params: { id: cloned.id } })
+  } else {
+    router.push({ name: 'Routine', params: { id: routine.id } })
+  }
 }
 
 function totalSecondsForBlock(block: RoutineBlock): number {
@@ -70,11 +102,23 @@ function routineTotalFormatted(r: Routine): string {
   return formatDuration(totalSeconds)
 }
 
+watch(routineSource, () => {
+  load()
+})
+
 onMounted(load)
 </script>
 
 <template>
-  <PageLayout title="My Routines">
+  <PageLayout title="Routines">
+    <div class="top-actions">
+      <SelectButton
+        v-model="routineSource"
+        :options="sourceOptions"
+        optionLabel="label"
+        optionValue="value"
+      />
+    </div>
     <template v-if="routines.length === 0">
       <Block title="No routines yet">
         <Button label="Create New Routine" @click="onCreateNew" />
@@ -113,9 +157,21 @@ onMounted(load)
             </div>
           </div>
           <template #footer>
-            <Button label="Select" severity="secondary" icon="pi pi-check" @click="onSelect(r.id)" />
-            <Button label="Edit" severity="secondary" icon="pi pi-pencil" @click="onEdit(r.id)" />
             <Button
+              :label="isExamplesSource ? 'Use Template' : 'Select'"
+              severity="secondary"
+              icon="pi pi-check"
+              @click="onSelect(r)"
+            />
+            <Button
+              v-if="!isExamplesSource"
+              label="Edit"
+              severity="secondary"
+              icon="pi pi-pencil"
+              @click="onEdit(r.id)"
+            />
+            <Button
+              v-if="!isExamplesSource"
               label="Delete"
               icon="pi pi-trash"
               severity="secondary"
@@ -150,6 +206,9 @@ onMounted(load)
 
 <style scoped>
 .top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
@@ -229,3 +288,5 @@ onMounted(load)
   gap: 0.75rem;
 }
 </style>
+
+
